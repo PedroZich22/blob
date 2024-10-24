@@ -1,4 +1,8 @@
+import { z } from "zod";
 import { FcGoogle } from "react-icons/fc";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,8 +15,34 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+
+const formSchema = z.object({
+  name: z.string().trim().min(1, "Required"),
+  email: z.string().email(),
+  password: z.string().min(8, "Minumum 8 characters"),
+});
 
 export const SignUpCard = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+  };
+
   return (
     <Card className="w-full md:w-[487px] h-full">
       <CardHeader className="flex items-center justify-center text-center p-7">
@@ -30,45 +60,66 @@ export const SignUpCard = () => {
       </CardHeader>
       <Separator />
       <CardContent className="p-7">
-        <form className="space-y-4">
-          <Input
-            required
-            type="text"
-            value={""}
-            onChange={() => {}}
-            placeholder="Name"
-            disabled={false}
-          />
-          <Input
-            required
-            type="email"
-            value={""}
-            onChange={() => {}}
-            placeholder="Email"
-            disabled={false}
-          />
-          <Input
-            required
-            type="password"
-            value={""}
-            onChange={() => {}}
-            placeholder="Password"
-            min={8}
-            max={64}
-            disabled={false}
-          />
-          <Button className="w-full">Login</Button>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              name="name"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} type="name" placeholder="Name" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} type="email" placeholder="Email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} type="password" placeholder="Password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="w-full">Login</Button>
+          </form>
+        </Form>
       </CardContent>
-      <div>
+      <div className="px-7">
         <Separator />
-        <CardContent className="p-7 flex flex-col gap-y-4">
-          <Button disabled={false} className="w-full" variant="secondary">
-            <FcGoogle className="mr-2 size-5" />
-            Login with Google
-          </Button>
-        </CardContent>
       </div>
+      <CardContent className="p-7 flex flex-col gap-y-4">
+        <Button disabled={false} className="w-full" variant="secondary">
+          <FcGoogle className="mr-2 size-5" />
+          Login with Google
+        </Button>
+      </CardContent>
+      <div className="px-7">
+        <Separator />
+      </div>
+      <CardContent className="p-7 flex items-center justify-center">
+        <p>Already have an account?</p>
+        <Link href="/sign-in">
+          <span className="underline">&nbsp;Login</span>
+        </Link>
+      </CardContent>
     </Card>
   );
 };

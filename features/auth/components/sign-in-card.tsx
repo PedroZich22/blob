@@ -1,11 +1,40 @@
 import { FcGoogle } from "react-icons/fc";
 
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import Link from "next/link";
+
+const formSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1, "Required"),
+});
 
 export const SignInCard = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+  };
+
   return (
     <Card className="w-full md:w-[487px] h-full">
       <CardHeader className="flex items-center justify-center text-center p-7">
@@ -13,37 +42,54 @@ export const SignInCard = () => {
       </CardHeader>
       <Separator />
       <CardContent className="p-7">
-        <form className="space-y-4">
-          <Input
-            required
-            type="email"
-            value={""}
-            onChange={() => {}}
-            placeholder="Email"
-            disabled={false}
-          />
-          <Input
-            required
-            type="password"
-            value={""}
-            onChange={() => {}}
-            placeholder="Password"
-            min={8}
-            max={64}
-            disabled={false}
-          />
-          <Button className="w-full">Login</Button>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} type="email" placeholder="Email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} type="password" placeholder="Password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button className="w-full">Login</Button>
+          </form>
+        </Form>
       </CardContent>
-      <div>
+      <div className="px-7">
         <Separator />
-        <CardContent className="p-7 flex flex-col gap-y-4">
-          <Button disabled={false} className="w-full" variant="secondary">
-            <FcGoogle className="mr-2 size-5" />
-            Login with Google
-          </Button>
-        </CardContent>
       </div>
+      <CardContent className="p-7 flex flex-col gap-y-4">
+        <Button disabled={false} className="w-full" variant="secondary">
+          <FcGoogle className="mr-2 size-5" />
+          Login with Google
+        </Button>
+      </CardContent>
+      <div className="px-7">
+        <Separator />
+      </div>
+      <CardContent className="p-7 flex items-center justify-center">
+        <p>Don&apos;t have an account?</p>
+        <Link href="/sign-up">
+          <span className="underline">&nbsp;Sign Up</span>
+        </Link>
+      </CardContent>
     </Card>
   );
 };
