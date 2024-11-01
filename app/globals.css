@@ -2,26 +2,78 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 185 50% 98%;
+    --foreground: 185 40% 10%;
+    --card: 185 50% 100%;
+    --card-foreground: 185 40% 10%;
+    --popover: 185 50% 100%;
+    --popover-foreground: 185 40% 10%;
+    --primary: 185 95% 40%;
+    --primary-foreground: 185 40% 98%;
+    --secondary: 185 30% 90%;
+    --secondary-foreground: 185 40% 10%;
+    --muted: 185 30% 92%;
+    --muted-foreground: 185 20% 40%;
+    --accent: 185 30% 92%;
+    --accent-foreground: 185 40% 10%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 185 30% 88%;
+    --input: 185 30% 88%;
+    --ring: 185 95% 40%;
+    --radius: 1.5rem;
+  }
+  .dark {
+    --background: 185 50% 3%;
+    --foreground: 185 20% 98%;
+    --card: 185 50% 5%;
+    --card-foreground: 185 20% 98%;
+    --popover: 185 50% 5%;
+    --popover-foreground: 185 20% 98%;
+    --primary: 185 95% 50%;
+    --primary-foreground: 185 20% 2%;
+    --secondary: 185 30% 15%;
+    --secondary-foreground: 185 20% 98%;
+    --muted: 185 30% 15%;
+    --muted-foreground: 185 20% 65%;
+    --accent: 185 30% 15%;
+    --accent-foreground: 185 20% 98%;
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 185 20% 98%;
+    --border: 185 30% 20%;
+    --input: 185 30% 20%;
+    --ring: 185 95% 50%;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* Estilos personalizados para o tema blob */
+.blob-card {
+  @apply rounded-[var(--radius)] bg-gradient-to-br from-cyan-50/80 to-sky-50/80 backdrop-blur-sm 
+         border border-cyan-100/50 shadow-lg shadow-cyan-100/20
+         dark:from-cyan-950/30 dark:to-sky-950/30 dark:border-cyan-900/30 dark:shadow-cyan-900/10;
+}
+
+.blob-button {
+  @apply rounded-full bg-gradient-to-r from-cyan-500 to-sky-500 text-white
+         hover:from-cyan-600 hover:to-sky-600 transition-all duration-300
+         shadow-sm shadow-cyan-200 hover:shadow-md hover:shadow-cyan-300
+         dark:shadow-cyan-900 dark:hover:shadow-cyan-800;
+}
+
+.blob-input {
+  @apply rounded-full border-cyan-200 bg-white/70 backdrop-blur-sm
+         focus:border-cyan-400 focus:ring-cyan-400
+         dark:border-cyan-800 dark:bg-cyan-950/30
+         dark:focus:border-cyan-600 dark:focus:ring-cyan-600;
 }
