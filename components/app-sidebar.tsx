@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, Search, Bell, Settings, User, Menu, LogOut } from "lucide-react";
+import { Home, Search, Bell, Settings, User, Menu } from "lucide-react";
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -10,18 +10,14 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "./user-avatar";
 import { ThemeToggle } from "./theme-toggle";
-import { useAuth } from "@/hooks/use-auth";
+import { useSession } from "next-auth/react";
 
 export function AppSidebar() {
-  const { user, isAuthenticated } = useAuth();
-  const pathname = usePathname();
   const [isOpen, setIsOpen] = React.useState(false);
+  const pathname = usePathname();
 
-  const userData = isAuthenticated ? {
-    name: user?.name || "Usuário",
-    email: user?.email || "",
-    avatar: user?.image || "https://github.com/shadcn.png",
-  } : null;
+  const { data: session } = useSession();
+  const userData = session?.user;
 
   const navigationItems = [
     {
@@ -85,18 +81,12 @@ export function AppSidebar() {
           </Link>
         ))}
       </nav>
-      <div className="mt-auto px-2 space-y-4">
-        <Button variant="outline" className="w-full justify-start gap-2">
-          <LogOut className="h-5 w-5" />
-          Sair
-        </Button>
-      </div>
     </div>
   );
 
   return (
     <>
-      {/* Versão Mobile - Sheet/Drawer */}
+      {/* Versão Mobile */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button

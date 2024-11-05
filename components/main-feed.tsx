@@ -39,7 +39,7 @@ export function MainFeed({ initialPosts }: MainFeedProps) {
         </div>
         <Categories />
         <div className="px-4">
-          <PostList initialPosts={initialPosts} />
+          <PostList posts={initialPosts} />
         </div>
       </main>
     </MainLayout>

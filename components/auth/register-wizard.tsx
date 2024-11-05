@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 import { RegisterStepAccount } from "./register-steps/step-account";
 import { RegisterStepProfile } from "./register-steps/step-profile";
 import { RegisterStepInterests } from "./register-steps/step-interests";
+import { Separator } from "@radix-ui/react-separator";
+import Link from "next/link";
 
 const steps = [
   {
@@ -56,7 +58,6 @@ export function RegisterWizard() {
     setStep((s) => Math.max(s - 1, 0));
   };
 
-  // Renderiza o passo atual
   const CurrentStepComponent = {
     0: RegisterStepAccount,
     1: RegisterStepProfile,
@@ -64,9 +65,8 @@ export function RegisterWizard() {
   }[step];
 
   return (
-    <Card className="w-[380px]">
+    <Card className="w-full md:w-[487px]">
       <CardHeader>
-        {/* Indicador de progresso */}
         <div className="flex items-center gap-4 mb-4">
           {steps.map((s, i) => (
             <div

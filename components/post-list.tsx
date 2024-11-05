@@ -1,26 +1,16 @@
 "use client";
-
-import { usePostsQuery } from "@/lib/queries/posts";
 import { Post } from "./post";
 import type { PostType } from "@/types/post";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface PostListProps {
-  initialPosts: PostType[];
+  posts: PostType[];
 }
 
-export function PostList({ initialPosts }: PostListProps) {
-  const { data, isLoading } = usePostsQuery({
-    initialData: { posts: initialPosts },
-  });
-
-  if (isLoading && !initialPosts.length) {
-    return <PostListSkeleton />;
-  }
-
+export function PostList({ posts }: PostListProps) {
   return (
     <div className="space-y-4 divide-y divide-border/40 pb-16 lg:pb-0">
-      {data?.posts.map((post) => (
+      {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
     </div>

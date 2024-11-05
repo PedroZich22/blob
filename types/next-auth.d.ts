@@ -1,15 +1,20 @@
-import type { DefaultSession } from "next-auth";
+import type { User } from "next-auth";
 
 declare module "next-auth" {
-  interface User {
-    username?: string | null;
-  }
-
-  interface Session extends DefaultSession {
-    user: {
+  interface Session {
+    user: User & {
       id: string;
       username?: string | null;
-    } & DefaultSession["user"];
+      avatarIcon?: string | null;
+      avatarColor?: string | null;
+    };
+  }
+
+  interface User {
+    id: string;
+    username?: string | null;
+    avatarIcon?: string | null;
+    avatarColor?: string | null;
   }
 }
 
@@ -17,5 +22,7 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     username?: string | null;
+    avatarIcon?: string | null;
+    avatarColor?: string | null;
   }
 } 

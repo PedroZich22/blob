@@ -1,4 +1,8 @@
-import { Providers } from "./providers";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { SessionProvider } from "next-auth/react";
+import { Toaster } from "@/components/ui/toaster";
+
+import "./globals.css";
 
 export default function RootLayout({
   children,
@@ -8,7 +12,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        <Providers>{children}</Providers>
+        <ThemeProvider>
+          <SessionProvider>{children}</SessionProvider>
+        </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );

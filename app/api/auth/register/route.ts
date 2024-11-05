@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 
 export async function POST(req: Request) {
@@ -7,10 +7,7 @@ export async function POST(req: Request) {
     const { email, password, name } = await req.json();
 
     if (!email || !password) {
-      return NextResponse.json(
-        { error: "Dados inválidos" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
 
     const exists = await prisma.user.findUnique({
@@ -43,9 +40,10 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { error: "Erro ao criar usuário" },
       { status: 500 }
     );
   }
-} 
+}

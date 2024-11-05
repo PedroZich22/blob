@@ -1,28 +1,26 @@
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+"use client";
+
+import { useAvatar } from "@/hooks/use-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { User } from "@prisma/client";
 
 interface UserAvatarProps {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
+  user: Pick<User, "name" | "image" | "avatarIcon" | "avatarColor">;
+  className?: string;
 }
 
-export function UserAvatar({ user }: UserAvatarProps) {
+export function UserAvatar({ user, className }: UserAvatarProps) {
+  const { Icon, color } = useAvatar({
+    iconId: user.avatarIcon,
+    colorId: user.avatarColor,
+  });
+
   return (
-    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-      <Avatar className="h-8 w-8 rounded-lg">
-        <AvatarImage src={user.avatar} alt={user.name} />
-        <AvatarFallback className="rounded-lg font-bold text-medium bg-primary">
-          {user.name.substring(0, 1).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-      <div className="grid flex-1 text-left text-sm leading-tight">
-        <span className="truncate font-semibold">{user.name}</span>
-        <span className="truncate text-xs text-muted-foreground">
-          {user.email}
-        </span>
-      </div>
-    </div>
+    <Avatar className={className}>
+      <AvatarImage src={user.image ?? undefined} alt={user.name ?? "Avatar"} />
+      <AvatarFallback className={color}>
+        <Icon className="h-6 w-6" />
+      </AvatarFallback>
+    </Avatar>
   );
 }

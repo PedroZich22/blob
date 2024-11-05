@@ -1,105 +1,121 @@
 "use client";
 
-import { FcGoogle } from "react-icons/fc";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import Link from "next/link";
-import { useCallback } from "react";
-import axios from "axios";
-import { useAuth } from "@/hooks/use-auth";
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(1, "Required"),
-});
-
-type SignInData = z.infer<typeof formSchema>;
+} from "../ui/form";
+import { LoginSchema } from "@/types/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { login } from "@/actions/login";
+import { useTransition } from "react";
+import { Icons } from "../icons";
+import { useToast } from "@/hooks/use-toast";
 
 export function SignInCard() {
-  const { login } = useAuth();
-  const form = useForm<SignInData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+  const { toast } = useToast();
+
+  const [isPending, startTransition] = useTransition();
+
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = useCallback(async (values: SignInData) => {
-    await axios.post("/api/auth/", values);
-  }, []);
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    startTransition(() => {
+      login(values)
+        .then(() => {
+          toast({
+            variant: "success",
+            title: "Login realizado com sucesso",
+            description: "Você foi redirecionado para a página inicial",
+          });
+        })
+        .catch((error) => {
+          toast({
+            variant: "destructive",
+            title: "Erro ao realizar login",
+            description: error.message,
+          });
+        });
+    });
+  };
 
   return (
     <Card className="w-full md:w-[487px]">
       <CardHeader className="flex items-center justify-center text-center p-7">
-        <CardTitle className="text-xl">Welcome back!</CardTitle>
+        <CardTitle className="text-xl">Bem-vindo de volta!</CardTitle>
       </CardHeader>
-      <Separator />
+      <div className="px-7">
+        <Separator />
+      </div>
       <CardContent className="p-7">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
-              name="email"
               control={form.control}
+              name="email"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input {...field} type="email" placeholder="Email" />
+                    <Input
+                      disabled={isPending}
+                      placeholder="Digite seu email"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <FormField
-              name="password"
               control={form.control}
+              name="password"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel>Senha</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="Password" />
+                    <Input
+                      disabled={isPending}
+                      placeholder="Digite sua senha"
+                      type="password"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="w-full">Login</Button>
+            <Button disabled={isPending} type="submit" className="w-full">
+              {isPending ? "Entrando..." : "Entrar"}
+            </Button>
           </form>
         </Form>
       </CardContent>
       <div className="px-7">
         <Separator />
       </div>
-      <CardContent className="p-7 flex flex-col gap-y-4">
-        <Button
-          disabled={false}
-          className="w-full"
-          variant="secondary"
-          onClick={() => login("google")}
-        >
-          <FcGoogle className="mr-2 size-5" />
-          Login with Google
+      <CardContent className="p-7">
+        <Button variant="outline" className="w-full">
+          <Icons.google className="mr-2 size-4" />
+          Continuar com Google
         </Button>
       </CardContent>
-      <div className="px-7">
-        <Separator />
-      </div>
-      <CardContent className="p-7 flex items-center justify-center">
-        <p>Don&apos;t have an account?&nbsp;</p>
-        <Link href="/sign-up">
-          <span className="underline text-primary">Sign Up</span>
+      <CardContent className="flex items-center justify-center">
+        <p>Não tem uma conta?&nbsp;</p>
+        <Link href="/register" className="underline text-primary">
+          Registre-se
         </Link>
       </CardContent>
     </Card>
