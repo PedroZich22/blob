@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcrypt";
-import { prisma } from "@/lib/prisma";
+import bcrypt from "bcryptjs";
+import { db } from "@/lib/db";
 
 export async function POST(req: Request) {
   try {
@@ -10,7 +10,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
     }
 
-    const exists = await prisma.user.findUnique({
+    const exists = await db.user.findUnique({
       where: { email },
     });
 
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
+    const user = await db.user.create({
       data: {
         email,
         password: hashedPassword,

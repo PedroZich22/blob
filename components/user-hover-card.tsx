@@ -6,9 +6,8 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CalendarDays } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { User } from "@prisma/client";
+import { formatDateDistanceToNowWithSuffix } from "@/utils/formatter";
 
 interface UserHoverCardProps {
   user: User;
@@ -18,14 +17,10 @@ export function UserHoverCard({ user }: UserHoverCardProps) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <Avatar
-          className="h-10 w-10 cursor-pointer rounded-[1rem] ring-2 ring-cyan-100 
-                         hover:ring-cyan-300 transition-all duration-300
-                         dark:ring-cyan-900 dark:hover:ring-cyan-700"
-        >
+        <Avatar className="h-10 w-10 cursor-pointer rounded-md">
           <AvatarImage src={user.image ?? ""} alt={user.name ?? ""} />
-          <AvatarFallback className="bg-gradient-to-br from-cyan-500 to-sky-500 text-white">
-            {user.name?.substring(0, 2).toUpperCase() ?? ""}
+          <AvatarFallback className="bg-primary text-white">
+            {user.name?.substring(0, 1).toUpperCase() ?? ""}
           </AvatarFallback>
         </Avatar>
       </HoverCardTrigger>
@@ -53,13 +48,13 @@ export function UserHoverCard({ user }: UserHoverCardProps) {
         <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <span className="font-semibold text-foreground">
-              {user.followingCount || 0}
+              {/* {user.followingCount || 0} */}
             </span>
             Seguindo
           </div>
           <div className="flex items-center gap-1">
             <span className="font-semibold text-foreground">
-              {user.followersCount || 0}
+              {/* {user.followersCount || 0} */}
             </span>
             Seguidores
           </div>
@@ -67,11 +62,7 @@ export function UserHoverCard({ user }: UserHoverCardProps) {
         <div className="flex items-center pt-4 text-xs text-muted-foreground">
           <CalendarDays className="mr-2 h-4 w-4" />
           Entrou{" "}
-          {user.createdAt &&
-            formatDistanceToNow(user.createdAt, {
-              addSuffix: true,
-              locale: ptBR,
-            })}
+          {user.createdAt && formatDateDistanceToNowWithSuffix(user.createdAt)}
         </div>
       </HoverCardContent>
     </HoverCard>

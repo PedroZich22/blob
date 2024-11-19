@@ -1,36 +1,38 @@
 "use server";
+
 import { z } from "zod";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
-import { prisma } from "@/lib/prisma";
-import { RegisterSchema } from "@/types/schemas";
-import { getUserByEmail, getUserByUsername } from "@/data/user";
+import { RegisterSchema } from "@/lib/schemas";
+import { createUser, getUserByEmail, getUserByUsername } from "@/data/user";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
-export async function register(values: z.infer<typeof RegisterSchema>) {
+type RegisterFormData = z.infer<typeof RegisterSchema>;
+
+export async function register(values: RegisterFormData) {
   const validatedValues = RegisterSchema.safeParse(values);
-
   if (!validatedValues.success) {
-    return new Error("Dados inválidos");
+    return { error: "Dados inválidos" };
   }
 
   const { email, password, username } = validatedValues.data;
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUserByEmail = await getUserByEmail(email);
-
   if (existingUserByEmail) {
-    return new Error("Email já cadastrado");
+    return { error: "Email já cadastrado" };
   }
 
   const existingUserByUsername = await getUserByUsername(username);
-
   if (existingUserByUsername) {
-    return new Error("Nome de usuário já cadastrado");
+    return { error: "Nome de usuário já cadastrado" };
   }
 
-  await prisma.user.create({
-    data: { email, password: hashedPassword, username },
-  });
+  await createUser({ email, password: hashedPassword, username });
 
-  // TODO: Send email with verification token
+  const verificationToken = await generateVerificationToken(email);
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
+  return { success: "Confira seu email para verificar sua conta" };
 }

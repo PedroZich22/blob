@@ -1,25 +1,36 @@
 "use client";
 
-import { Home, Search, Bell, Settings, User, Menu } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
+import {
+  Home,
+  Search,
+  Bell,
+  Settings,
+  User,
+  Menu,
+  LucideIcon,
+} from "lucide-react";
 
+import { UserAvatar } from "./user-avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { UserAvatar } from "./user-avatar";
-import { ThemeToggle } from "./theme-toggle";
-import { useSession } from "next-auth/react";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
+type SidebarNavItem = {
+  href: string;
+  title: string;
+  icon: LucideIcon;
+};
 
 export function AppSidebar() {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const user = useCurrentUser();
 
-  const { data: session } = useSession();
-  const userData = session?.user;
-
-  const navigationItems = [
+  const navigationItems: SidebarNavItem[] = [
     {
       title: "Home",
       icon: Home,
@@ -38,7 +49,7 @@ export function AppSidebar() {
     {
       title: "Perfil",
       icon: User,
-      href: "/profile",
+      href: `/profile/${user?.name}`,
     },
     {
       title: "Configurações",
@@ -48,19 +59,9 @@ export function AppSidebar() {
   ];
 
   const NavContent = () => (
-    <div
-      className="flex h-full flex-col gap-4 p-4 bg-gradient-to-b from-cyan-50/90 to-sky-50/90 
-                    dark:from-cyan-950/90 dark:to-sky-950/90 backdrop-blur-sm"
-    >
-      <div className="flex items-center justify-between px-2 py-4">
-        {userData ? (
-          <UserAvatar user={userData} />
-        ) : (
-          <Button asChild variant="default">
-            <Link href="/login">Entrar</Link>
-          </Button>
-        )}
-        <ThemeToggle />
+    <div className="flex h-full flex-col gap-4 p-4 bg-background">
+      <div className="flex items-center justify-between p-2 border border-border rounded-lg">
+        <UserAvatar />
       </div>
       <nav className="flex flex-col gap-2 px-2">
         {navigationItems.map((item) => (
@@ -69,10 +70,10 @@ export function AppSidebar() {
             href={item.href}
             onClick={() => setIsOpen(false)}
             className={cn(
-              "flex items-center gap-4 rounded-full px-4 py-3 text-sm font-medium transition-all duration-300",
-              "hover:bg-cyan-100/50 dark:hover:bg-cyan-900/50",
+              "flex items-center gap-4 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-300",
+              "hover:bg-foreground/10",
               pathname === item.href
-                ? "bg-gradient-to-r from-cyan-500 to-sky-500 text-white"
+                ? "bg-primary text-primary-foreground hover:bg-primary/90"
                 : "text-muted-foreground"
             )}
           >
@@ -86,7 +87,6 @@ export function AppSidebar() {
 
   return (
     <>
-      {/* Versão Mobile */}
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <Button
@@ -102,8 +102,7 @@ export function AppSidebar() {
         </SheetContent>
       </Sheet>
 
-      {/* Versão Desktop */}
-      <div className="hidden lg:block sticky top-0 h-screen w-[300px] border-r">
+      <div className="hidden lg:block sticky top-0 h-screen w-[300px] border-r border-border/40">
         <NavContent />
       </div>
     </>

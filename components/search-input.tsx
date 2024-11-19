@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { Search } from "lucide-react";
 
 import {
@@ -14,21 +14,10 @@ import {
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-interface User {
-  id: string;
-  name: string;
-  username: string;
-  avatar: string;
-  bio: string;
-  followersCount: number;
-  isVerified?: boolean;
-}
-
 export function SearchInput() {
-  const [open, setOpen] = React.useState(false);
-  const [query, setQuery] = React.useState("");
+  const [open, setOpen] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -39,53 +28,7 @@ export function SearchInput() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  // Simulação de usuários (depois você pode substituir por uma chamada API)
-  const users: User[] = [
-    {
-      id: "1",
-      name: "Jane Cooper",
-      username: "@janecooper",
-      avatar: "https://github.com/shadcn.png",
-      bio: "Digital designer and developer",
-      followersCount: 1234,
-      isVerified: true,
-    },
-    {
-      id: "2",
-      name: "John Doe",
-      username: "@johndoe",
-      avatar: "https://github.com/shadcn.png",
-      bio: "Frontend Developer",
-      followersCount: 567,
-    },
-    {
-      id: "3",
-      name: "Alice Johnson",
-      username: "@alicej",
-      avatar: "https://github.com/shadcn.png",
-      bio: "UI/UX Designer",
-      followersCount: 890,
-      isVerified: true,
-    },
-  ];
-
-  // Filtra usuários baseado na busca
-  const filteredUsers = React.useMemo(() => {
-    if (!query) return users;
-    const lowerQuery = query.toLowerCase();
-    return users.filter(
-      (user) =>
-        user.name.toLowerCase().includes(lowerQuery) ||
-        user.username.toLowerCase().includes(lowerQuery) ||
-        user.bio.toLowerCase().includes(lowerQuery)
-    );
-  }, [query]);
-
-  const handleSelectUser = React.useCallback((userId: string) => {
-    // Aqui você pode implementar a navegação para o perfil do usuário
-    console.log(`Navegando para o perfil do usuário ${userId}`);
-    setOpen(false);
-  }, []);
+  function handleSelectUser() {}
 
   return (
     <div className="relative">
@@ -118,12 +61,7 @@ export function SearchInput() {
               >
                 <Avatar className="h-9 w-9">
                   <AvatarImage src={user.avatar} />
-                  <AvatarFallback>
-                    {user.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
+                  <AvatarFallback>{user.name}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col flex-1 overflow-hidden">
                   <div className="flex items-center gap-1">

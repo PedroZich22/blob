@@ -1,21 +1,16 @@
+import { useUsers } from "@/hooks/use-users";
 import { Button } from "./ui/button";
 
-import { UserAvatar } from "./user-avatar";
-
-const users = [
-  {
-    name: "John Doe",
-    email: "john@example.com",
-    avatar: "https://github.com/PedroZich22.png",
-  },
-];
-
 export function UserSuggestions() {
+  const { users, isLoading } = useUsers();
+
+  if (isLoading) return <div>Loading...</div>;
+
   return (
     <div className="space-y-4">
-      {users.map((user) => (
+      {users?.map((user) => (
         <div className="flex items-center justify-between" key={user.email}>
-          <UserAvatar user={user} />
+          {user.username}
           <Button variant="outline" size="sm">
             Seguir
           </Button>

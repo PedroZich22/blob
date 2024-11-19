@@ -1,23 +1,24 @@
 "use client";
-import { Post } from "./post";
-import type { PostType } from "@/types/post";
+
+import { Post } from "@prisma/client";
+import { PostItem } from "./post-item";
 import { Skeleton } from "@/components/ui/skeleton";
 
-interface PostListProps {
-  posts: PostType[];
+interface PostFeedProps {
+  posts: Post[];
 }
 
-export function PostList({ posts }: PostListProps) {
+export function PostFeed({ posts }: PostFeedProps) {
   return (
     <div className="space-y-4 divide-y divide-border/40 pb-16 lg:pb-0">
       {posts.map((post) => (
-        <Post key={post.id} post={post} />
+        <PostItem key={post.id} post={post} />
       ))}
     </div>
   );
 }
 
-function PostListSkeleton() {
+function PostFeedSkeleton() {
   return (
     <div className="space-y-4">
       {Array.from({ length: 3 }).map((_, i) => (

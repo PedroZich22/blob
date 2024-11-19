@@ -1,4 +1,4 @@
-import { AVATAR_ICONS, AVATAR_COLORS } from "@/lib/constants/avatar-options";
+import { AVATAR_ICONS, AVATAR_COLORS } from "@/constants/avatar-options";
 import type { LucideIcon } from "lucide-react";
 
 interface UseAvatarProps {
@@ -15,4 +15,4 @@ export function useAvatar({ iconId, colorId }: UseAvatarProps) {
     color: color.class,
     label: icon.label,
   };
-} 
+}
