@@ -20,7 +20,7 @@ export function RegisterForm() {
 
   return (
     <MultiStepForm context={RegisterFormContext}>
-      <Card className="w-full md:w-[487px] shadow-lg h-full">
+      <Card className="w-full md:w-[478px] shadow-lg h-full">
         <CardHeader>
           <MultiStepNavbar context={RegisterFormContext} />
           <CardTitle className="text-2xl">{currentStepTitle}</CardTitle>

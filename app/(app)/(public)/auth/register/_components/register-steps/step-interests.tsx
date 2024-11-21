@@ -6,50 +6,88 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useInterests } from "@/hooks/use-interests";
-import { Checkbox } from "@radix-ui/react-checkbox";
+import { InterestItem, InterestItemSkeleton } from "@/components/interest-item";
+import { useQuery } from "@tanstack/react-query";
+import { fetchInterests } from "@/actions/interests";
 
 export function RegisterStepInterests() {
   const form = useFormContext();
-  const { data: interests } = useInterests();
+  const {
+    data: interests,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["interests"],
+    queryFn: () => fetchInterests(),
+  });
 
-  if (!interests) {
-    return null;
+  if (isLoading) {
+    return <InterestItemsSkeleton />;
+  }
+
+  if (error) return "An error has occurred: " + error.message;
+
+  function handleSelectInterest(id: string) {
+    const currentInterests = form.getValues("interests") || [];
+
+    if (currentInterests.includes(id)) {
+      form.setValue(
+        "interests",
+        currentInterests.filter((interestId: string) => interestId !== id)
+      );
+    } else {
+      form.setValue("interests", [...currentInterests, id]);
+    }
   }
 
   return (
-    <div className="space-y-4">
-      {interests.map((interest) => (
-        <FormField
-          key={interest.id}
-          control={form.control}
-          name="interests"
-          render={({ field }) => (
-            <FormItem
-              key={interest.id}
-              className="flex flex-row items-start space-x-3 space-y-0"
-            >
-              <FormControl>
-                <Checkbox
-                  checked={field.value?.includes(interest.id)}
-                  onCheckedChange={(checked) => {
-                    return checked
-                      ? field.onChange([...field.value, interest.id])
-                      : field.onChange(
-                          field.value?.filter((value) => value !== interest.id)
-                        );
-                  }}
-                />
-              </FormControl>
-              <FormLabel className="font-normal">{interest.name}</FormLabel>
-            </FormItem>
-          )}
-        />
-      ))}
-      <FormMessage />
+    <div>
+      <FormField
+        control={form.control}
+        name="interests"
+        render={() => (
+          <FormItem className="flex flex-row flex-wrap items-start space-y-0 gap-2">
+            {interests?.map((interest) => (
+              <FormField
+                key={interest.id}
+                control={form.control}
+                name="interests"
+                render={({ field }) => {
+                  return (
+                    <FormItem
+                      key={interest.id}
+                      className="flex flex-row items-start"
+                    >
+                      <FormControl>
+                        <InterestItem
+                          interest={interest}
+                          onClick={() => handleSelectInterest(interest.id)}
+                          selected={field.value?.includes(interest.id)}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  );
+                }}
+              />
+            ))}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </div>
+  );
+}
+
+function InterestItemsSkeleton() {
+  return (
+    <div className="flex flex-row flex-wrap items-start space-y-0 gap-2">
+      <InterestItemSkeleton />
+      <InterestItemSkeleton />
+      <InterestItemSkeleton />
+      <InterestItemSkeleton />
+      <InterestItemSkeleton />
     </div>
   );
 }

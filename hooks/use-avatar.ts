@@ -13,6 +13,5 @@ export function useAvatar({ iconId, colorId }: UseAvatarProps) {
   return {
     Icon: icon.icon as LucideIcon,
     color: color.class,
-    label: icon.label,
   };
 }

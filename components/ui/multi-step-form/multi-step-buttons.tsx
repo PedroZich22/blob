@@ -2,7 +2,6 @@
 
 import type { Context } from "react";
 import { cn } from "@/lib/utils";
-
 import { Button } from "@/components/ui/button";
 import { useMultiStepForm } from "@/hooks/use-multi-step-form";
 import type { UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
@@ -27,6 +26,7 @@ export function MultiStepNavButtons<
   return (
     <div className="flex flex-row items-center gap-4 justify-between w-full">
       <Button
+        type="button"
         variant="outline"
         onClick={previousStep}
         className={cn(`${isFirstStep ? "invisible" : "visible"}`, "w-full")}

@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CalendarDays } from "lucide-react";
 import { User } from "@prisma/client";
-import { formatDateDistanceToNowWithSuffix } from "@/utils/formatter";
+import { formatDateDistanceToNowWithSuffix } from "@/lib/formatter";
 
 interface UserHoverCardProps {
   user: User;

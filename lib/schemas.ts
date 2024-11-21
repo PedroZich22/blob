@@ -16,7 +16,11 @@ export const RegisterSchema = z.object({
   password: z
     .string()
     .min(6, { message: "Senha deve ter no mínimo 6 caracteres" }),
-  iconId: z.string(), // criar um negocio padronizado pra tipar os icones e cores com base nas constantes (vou ter q ver na documentação do zod)
-  colorId: z.string(),
-  interests: z.array(z.string()).min(1, "Selecione pelo menos um interesse"),
+  avatar: z.object({
+    icon: z.string(),
+    color: z.string(),
+  }),
+  interests: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: "Selecione pelo menos um interesse",
+  }),
 });

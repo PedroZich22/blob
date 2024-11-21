@@ -5,7 +5,6 @@ import { useMultiStepForm } from "@/hooks/use-multi-step-form";
 import { Form } from "@/components/ui/form";
 import { UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
 import { cn } from "@/lib/utils";
-import { RegisterFormContext } from "@/app/(app)/(public)/auth/register/_components/multi-step-register-config";
 
 interface MultiStepFormProps<T> {
   children: React.ReactNode;

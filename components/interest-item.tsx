@@ -2,29 +2,40 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { formatCompactNumber } from "@/utils/formatter";
+import { formatCompactNumber } from "@/lib/formatter";
+import { Skeleton } from "./ui/skeleton";
 
 interface InterestItemProps {
   interest: any;
   selected: boolean;
-  onChange: () => void;
+  onClick: () => void;
 }
 
 export function InterestItem({
   interest,
-  onChange,
+  onClick,
   selected,
 }: InterestItemProps) {
   return (
     <Button
-      onChange={onChange}
+      onClick={onClick}
       variant="outline"
-      className={cn(selected, "bg-primary/50")}
+      type="button"
+      className={cn(selected && "bg-primary/50 hover:bg-primary/30")}
     >
       <span>#{interest.name}</span>
-      <span className="ml-1.5 text-muted-foreground">
-        {formatCompactNumber(interest.count)}
-      </span>
+      {interest.count && (
+        <span className="ml-1.5 text-muted-foreground">
+          {formatCompactNumber(interest.count)}
+        </span>
+      )}
     </Button>
   );
+}
+
+export function InterestItemSkeleton({
+  className,
+  ...props
+}: React.ComponentProps<typeof Skeleton>) {
+  return <Skeleton className={cn("w-20 h-8", className)} {...props} />;
 }

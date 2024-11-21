@@ -10,26 +10,28 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useFormContext } from "react-hook-form";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { useAvatar } from "@/hooks/use-avatar";
 
 export function RegisterStepProfile() {
   const form = useFormContext();
-  const [iconId, colorId] = form.watch(["iconId", "colorId"]);
 
-  const Icon = AVATAR_ICONS.find((a) => a.id === iconId)?.icon;
-  const colorClassName = AVATAR_COLORS.find((a) => a.id === colorId)?.class;
+  const [iconId, colorId] = form.watch(["avatar.icon", "avatar.color"]);
+  const { Icon, color } = useAvatar({ iconId, colorId });
 
   return (
     <div className="space-y-4">
-      <Avatar>
-        <AvatarFallback className={cn("rounded-lg", colorClassName)}>
-          {Icon && <Icon />}
-        </AvatarFallback>
-      </Avatar>
+      <div className="flex justify-center">
+        <Avatar size="lg">
+          <AvatarFallback className={cn(color)}>
+            {Icon && <Icon className="size-full" />}
+          </AvatarFallback>
+        </Avatar>
+      </div>
       <FormField
         control={form.control}
-        name="iconId"
+        name="avatar.icon"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Ícone do perfil</FormLabel>
@@ -58,7 +60,7 @@ export function RegisterStepProfile() {
       />
       <FormField
         control={form.control}
-        name="colorId"
+        name="avatar.color"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Cor do avatar</FormLabel>

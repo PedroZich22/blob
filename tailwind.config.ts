@@ -8,6 +8,7 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./constants/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     fontSize: {
@@ -21,7 +22,14 @@ const config: Config = {
     },
     extend: {
       colors: {
+        cyan: colors.cyan,
+        sky: colors.sky,
+        blue: colors.blue,
+        violet: colors.violet,
+        purple: colors.purple,
+        pink: colors.pink,
         emerald: colors.emerald,
+        amber: colors.amber,
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

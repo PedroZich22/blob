@@ -1,8 +1,7 @@
-import type { z } from "zod";
-
+import type { UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
 import { type Context, useCallback, useContext } from "react";
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form";
-import type { UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
+import type { z } from "zod";
 
 /**
  * Custom hook for managing a multi-step form.
@@ -18,7 +17,6 @@ function useMultiStepForm<T extends UseMultiStepFormTypeOptions<any>>(
 ) {
   const { forms, schema, currentStep, setCurrentStep, form, saveFormData } =
     useContext(context);
-
   if (form === undefined) throw new Error("A react-hook-form must be defined");
 
   const steps = forms.length;
@@ -27,14 +25,14 @@ function useMultiStepForm<T extends UseMultiStepFormTypeOptions<any>>(
    * Advances to the next step if not already at the last step.
    */
   const nextStep = () => {
-    if (currentStep < steps - 1) setCurrentStep((step) => step + 1);
+    setCurrentStep((prevStep) => Math.min(prevStep + 1, steps - 1));
   };
 
   /**
    * Goes back to the previous step if not already at the first step.
    */
   const previousStep = () => {
-    if (currentStep > 0) setCurrentStep((step) => step - 1);
+    setCurrentStep((prevStep) => Math.max(prevStep - 1, 0));
   };
 
   /**
@@ -43,7 +41,7 @@ function useMultiStepForm<T extends UseMultiStepFormTypeOptions<any>>(
    * @param {number} index - The index of the step to go to.
    */
   const goToStep = (index: number) => {
-    if (index >= 0 && index < steps) setCurrentStep((step) => index);
+    setCurrentStep(Math.max(0, Math.min(index, steps - 1)));
   };
 
   /**
@@ -68,9 +66,9 @@ function useMultiStepForm<T extends UseMultiStepFormTypeOptions<any>>(
   const currentStepTitle = forms[currentStep].title;
 
   /**
-   * Get the current step description
+   * Get the current step description.
    *
-   * @returns {string} The current step description
+   * @returns {string} The current step description.
    */
   const currentStepDescription = forms[currentStep].description;
 
@@ -81,7 +79,7 @@ function useMultiStepForm<T extends UseMultiStepFormTypeOptions<any>>(
    */
   const onSubmit: SubmitHandler<z.infer<typeof schema>> = async (values) => {
     if (isLastStep) await saveFormData(values);
-    nextStep();
+    else nextStep();
   };
 
   /**

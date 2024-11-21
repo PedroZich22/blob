@@ -38,17 +38,24 @@ export function buildMultiStepForm<
       initialFormOptions.currentStep
     );
 
-    console.log("currentStep", currentStep);
-
     const form = useForm<T>({
       resolver: zodResolver(schema),
       defaultValues: initialFormData,
     });
 
+    const contextValue = {
+      ...initialFormOptions,
+      setCurrentStep: (value: number | ((prevStep: number) => number)) => {
+        setCurrentStep(
+          typeof value === "function" ? value(currentStep) : value
+        );
+      },
+      currentStep,
+      form,
+    };
+
     return (
-      <FormContext.Provider
-        value={{ ...initialFormOptions, setCurrentStep, currentStep, form }}
-      >
+      <FormContext.Provider value={contextValue}>
         {children}
       </FormContext.Provider>
     );

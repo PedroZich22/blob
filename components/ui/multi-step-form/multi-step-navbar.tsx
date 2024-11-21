@@ -5,7 +5,7 @@ import type { Context } from "react";
 import { cn } from "@/lib/utils";
 import { useMultiStepForm } from "@/hooks/use-multi-step-form";
 import type { UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
-import { Button } from "../button";
+import { Button } from "@/components/ui/button";
 
 interface MultiStepNavBarProps<T> extends React.HTMLAttributes<HTMLElement> {
   context: Context<T>;
@@ -32,13 +32,13 @@ export function MultiStepNavbar<T extends UseMultiStepFormTypeOptions<any>>({
             {i <= currentStep && (
               <Button
                 onClick={() => goToStep(i)}
+                type="button"
                 className="w-full h-2 p-0 bg-primary rounded-full mt-1"
                 aria-label={`Go to step ${i + 1} ǀ ${title}`}
               >
                 <span className="sr-only">
                   Step {i + 1} | {title}
                 </span>
-                {i}
               </Button>
             )}
           </li>

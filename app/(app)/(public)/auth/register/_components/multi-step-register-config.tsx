@@ -9,7 +9,7 @@ import { RegisterStepAccount } from "./register-steps/step-account";
 import { RegisterStepInterests } from "./register-steps/step-interests";
 import { RegisterStepProfile } from "./register-steps/step-profile";
 
-import { buildMultiStepForm } from "@/lib/multi-step-form";
+import { buildMultiStepForm } from "@/lib/multi-step-form-builder";
 import { RegisterSchema } from "@/lib/schemas";
 import { AVATAR_COLORS, AVATAR_ICONS } from "@/constants/avatar-options";
 import { register } from "@/actions/register";
@@ -20,14 +20,15 @@ export const initialFormData: RegisterFormType = {
   email: "",
   username: "",
   password: "",
-  colorId: AVATAR_COLORS[0].id,
-  iconId: AVATAR_ICONS[0].id,
+  avatar: {
+    color: AVATAR_COLORS[0].id,
+    icon: AVATAR_ICONS[0].id,
+  },
   interests: [],
 };
 
 const saveFormData: SubmitHandler<RegisterFormType> = async (values) => {
-  console.log(values);
-  //register(values);
+  console.log("Saving form data", values);
 };
 
 export const forms: Form<RegisterFormType>[] = [
@@ -41,14 +42,14 @@ export const forms: Form<RegisterFormType>[] = [
   {
     id: 2,
     title: "Perfil",
-    description: "Personalize seu perfil para deixar com a sua cara!",
+    description: "Personalize seu avatar para deixar com a sua cara!",
     form: RegisterStepProfile,
-    fields: ["colorId", "iconId"],
+    fields: ["avatar"],
   },
   {
     id: 3,
     title: "Interesses",
-    description: "O que gostaria de ver sobre?",
+    description: "O que gostaria de ver?",
     form: RegisterStepInterests,
     fields: ["interests"],
   },

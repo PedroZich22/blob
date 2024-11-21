@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
   Carousel,
   CarouselContent,
@@ -15,13 +14,21 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { useInterests } from "@/lib/api/queries";
 import { InterestItem } from "./interest-item";
+import { useInterests } from "@/hooks/use-interests";
+import { useState } from "react";
 
 export function Interests() {
-  const interests = useInterests();
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const { data: interests } = useInterests();
 
-  function handleInterestClick() {}
+  function handleInterestClick(id: string) {
+    if (selectedInterests.includes(id)) {
+      setSelectedInterests((prev) => prev.filter((i) => i !== id));
+    } else {
+      setSelectedInterests((prev) => [...prev, id]);
+    }
+  }
 
   return (
     <div className="py-2 px-2 lg:px-4 mx-8 my-2">
@@ -29,7 +36,7 @@ export function Interests() {
         <Carousel opts={{ align: "start" }} className="w-full">
           <TooltipProvider>
             <CarouselContent className="-ml-2">
-              {interests.data?.map((item) => (
+              {interests?.map((item) => (
                 <CarouselItem key={item.id} className="pl-2 basis-auto">
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -37,7 +44,7 @@ export function Interests() {
                         <InterestItem
                           interest={item}
                           onClick={() => handleInterestClick(item.id)}
-                          selected={currentInterest === item.id}
+                          selected={selectedInterests.includes(item.id)}
                         />
                       </div>
                     </TooltipTrigger>

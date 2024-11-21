@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import { CalendarDays } from "lucide-react";
 import { PostFeed } from "./post-list";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { formatDateDistanceToNowWithSuffix } from "@/utils/formatter";
+import { formatDateDistanceToNowWithSuffix } from "@/lib/formatter";
 
 export function UserProfile() {
   const user = useCurrentUser();
