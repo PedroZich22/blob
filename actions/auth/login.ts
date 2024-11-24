@@ -1,5 +1,5 @@
 "use server";
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail } from "@/actions/user";
 import { LoginSchema } from "@/lib/schemas";
 import { signIn } from "@/auth";
 import { z } from "zod";

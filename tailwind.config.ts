@@ -19,6 +19,7 @@ const config: Config = {
       xl: "1.25rem",
       "2xl": "1.5rem",
       "3xl": "1.875rem",
+      "4xl": "2.25rem",
     },
     extend: {
       colors: {
@@ -91,6 +92,10 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       keyframes: {
+        shine: {
+          from: { backgroundPosition: "200% 0" },
+          to: { backgroundPosition: "-200% 0" },
+        },
         "accordion-down": {
           from: {
             height: "0",
@@ -133,6 +138,7 @@ const config: Config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "bubble-bounce": "bubble-bounce 1.4s infinite ease-in-out",
         "bubble-pulse": "bubble-pulse 1s infinite ease-in-out",
+        shine: "shine 8s ease-in-out infinite",
       },
     },
   },

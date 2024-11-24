@@ -4,6 +4,8 @@ import { SearchInput } from "@/components/search-input";
 import { SiteHeader } from "@/components/site-header";
 import { MainLayout } from "./layouts/main-layout";
 import { Interests } from "./interests";
+import { CreatePost } from "./create-post";
+import { PostFeed } from "./post-list";
 
 export function MainFeed() {
   return (
@@ -16,7 +18,9 @@ export function MainFeed() {
           </div>
         </div>
         <Interests />
-        <div className="px-4"></div>
+        <div>
+          <PostFeed posts={[]} />
+        </div>
       </main>
     </MainLayout>
   );

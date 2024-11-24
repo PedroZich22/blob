@@ -1,17 +1,25 @@
 import { v4 as uuidv4 } from "uuid";
-import { db } from "@/lib/db";
-import { getVerificationTokenByEmail } from "@/data/verification-token";
+
+import {
+  createVerificationToken,
+  deleteVerificationToken,
+  getVerificationTokenByEmail,
+} from "@/actions/auth/verification-token";
 
 export async function generateVerificationToken(email: string) {
   const token = uuidv4();
-  const expiresAt = new Date(new Date().getTime() + 60 * 60 * 1000);
+  const expiresAt = new Date(new Date().getTime() + 2 * 60 * 60 * 1000); // 2 hours
 
   const existingToken = await getVerificationTokenByEmail(email);
   if (existingToken) {
-    await db.verificationToken.delete({ where: { id: existingToken.id } });
+    await deleteVerificationToken(existingToken.token);
   }
 
-  return await db.verificationToken.create({
-    data: { email, token, expiresAt },
+  const verificationToken = await createVerificationToken({
+    email,
+    token,
+    expiresAt,
   });
+
+  return verificationToken;
 }

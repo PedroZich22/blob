@@ -11,7 +11,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { logout } from "@/actions/logout";
+import { logout } from "@/actions/auth/logout";
 
 export function UserAvatar() {
   const user = useCurrentUser();
@@ -38,8 +38,7 @@ export function UserAvatar() {
           </AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <p className="text-sm font-medium">{user?.name}</p>
-          <p className="text-xs text-muted-foreground">{user?.username}</p>
+          <span className="text-sm font-medium">{user?.name}</span>
         </div>
       </div>
       <DropdownMenu>

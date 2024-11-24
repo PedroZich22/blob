@@ -13,9 +13,23 @@ import {
 } from "@/components/ui/command";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { getUsersFiltered } from "@/actions/user";
+import { useDebounce } from "@/hooks/use-debounce";
 
 export function SearchInput() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const debouncerdQuery = useDebounce(query, 1000);
+
+  // TODO: Paginar resultados
+  const { data: filteredUsers } = useQuery({
+    enabled: open,
+    queryKey: ["search", debouncerdQuery],
+    queryFn: () => getUsersFiltered(debouncerdQuery),
+  });
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -28,7 +42,10 @@ export function SearchInput() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
-  function handleSelectUser() {}
+  function handleSelectUser(id: string) {
+    setOpen(false);
+    router.push("/profile/" + id);
+  }
 
   return (
     <div className="relative">
@@ -52,31 +69,26 @@ export function SearchInput() {
         />
         <CommandList>
           <CommandEmpty>Nenhum usuário encontrado.</CommandEmpty>
-          <CommandGroup heading="Pessoas">
-            {filteredUsers.map((user) => (
+          <CommandGroup heading="Pessoas" className="p-2">
+            {filteredUsers?.map((user) => (
               <CommandItem
                 key={user.id}
                 onSelect={() => handleSelectUser(user.id)}
-                className="flex items-center gap-3 p-2"
+                className="flex items-center gap-3 p-2 cursor-pointer"
               >
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src={user.avatar} />
+                  <AvatarImage src={user.image ?? undefined} />
                   <AvatarFallback>{user.name}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col flex-1 overflow-hidden">
                   <div className="flex items-center gap-1">
                     <span className="font-medium truncate">{user.name}</span>
-                    {user.isVerified && (
-                      <span className="inline-flex items-center rounded-md bg-blue-50 px-1.5 py-0.5 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
-                        Verificado
-                      </span>
-                    )}
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <span className="truncate">{user.username}</span>
+                    <span className="truncate">@{user.username}</span>
                     <span>·</span>
                     <span className="truncate">
-                      {user.followersCount.toLocaleString("pt-BR")} seguidores
+                      {user._count.followers} seguidores
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground truncate">

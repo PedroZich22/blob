@@ -11,21 +11,21 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
- 
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@unique([provider, providerAccountId])
 }
 
@@ -38,16 +38,16 @@ model User {
   password      String?
   username      String?   @unique
   bio           String?
-  avatarIcon    String?   @default("user")
-  avatarColor   String?   @default("cyan")
+  avatarIcon    String?   @default("user") // pensar nisso aq
+  avatarColor   String?   @default("cyan") // pensar nisso aq
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts      Account[]
-  posts         Post[]
-  interests     Interest[]
-  followers     Follow[]    @relation("following")
-  following     Follow[]    @relation("followers")
+  accounts  Account[]
+  posts     Post[]
+  interests Interest[]
+  followers Follow[]   @relation("following")
+  following Follow[]   @relation("followers")
 }
 
 model Interest {
@@ -70,7 +70,7 @@ model Post {
   reposts   Repost[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  isPublic  Boolean   @default(true)
+  isPublic  Boolean    @default(true)
 }
 
 model Like {
@@ -106,7 +106,7 @@ model Follow {
 
 model VerificationToken {
   id        String   @id @default(cuid())
-  email     String   
+  email     String
   token     String   @unique
   expiresAt DateTime
 

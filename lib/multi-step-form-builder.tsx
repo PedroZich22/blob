@@ -45,11 +45,7 @@ export function buildMultiStepForm<
 
     const contextValue = {
       ...initialFormOptions,
-      setCurrentStep: (value: number | ((prevStep: number) => number)) => {
-        setCurrentStep(
-          typeof value === "function" ? value(currentStep) : value
-        );
-      },
+      setCurrentStep,
       currentStep,
       form,
     };

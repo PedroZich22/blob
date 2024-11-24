@@ -8,17 +8,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BubbleSpinner } from "@/components/ui/bubble-spinner";
-import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useTransition } from "react";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { newVerification } from "@/actions/new-verification";
+import { newVerification } from "@/actions/auth/new-verification";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
+import { BubbleSpinner } from "@/components/ui/bubble-spinner";
 
 export function NewVerificationForm() {
+  const router = useRouter();
   const { toast } = useToast();
+
+  const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -32,7 +36,9 @@ export function NewVerificationForm() {
       return;
     }
 
-    newVerification(token).then((result) => {
+    startTransition(async () => {
+      const result = await newVerification(token);
+
       if (result?.error) {
         toast({
           variant: "destructive",
@@ -47,13 +53,11 @@ export function NewVerificationForm() {
           title: "Email confirmado com sucesso",
           description: result.success,
         });
+        router.push(DEFAULT_LOGIN_REDIRECT);
+        router.refresh();
       }
     });
   }, [token, toast]);
-
-  useEffect(() => {
-    onSubmit();
-  }, [onSubmit]);
 
   return (
     <Card className="w-full md:w-[487px] shadow-lg h-full">
@@ -64,7 +68,11 @@ export function NewVerificationForm() {
         </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center items-center">
-        <BubbleSpinner size="lg" variant="primary" />
+        {isPending ? (
+          <BubbleSpinner size="lg" variant="primary" />
+        ) : (
+          <Button onClick={onSubmit}>Verificar email</Button>
+        )}
       </CardContent>
       <CardFooter className="flex justify-center">
         <Button variant="link" asChild>

@@ -26,7 +26,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@radix-ui/react-dropdown-menu";
-import { getUserById } from "@/data/user";
+import { getUserById } from "@/actions/user";
 import { InterestItem } from "./interest-item";
 
 interface PostProps {

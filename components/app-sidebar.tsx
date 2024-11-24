@@ -18,6 +18,7 @@ import { UserAvatar } from "./user-avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { CreatePost } from "./create-post";
 
 type SidebarNavItem = {
   href: string;
@@ -49,7 +50,7 @@ export function AppSidebar() {
     {
       title: "Perfil",
       icon: User,
-      href: `/profile/${user?.name}`,
+      href: `/profile/${user?.id}`,
     },
     {
       title: "Configurações",
@@ -59,8 +60,8 @@ export function AppSidebar() {
   ];
 
   const NavContent = () => (
-    <div className="flex h-full flex-col gap-4 p-4 bg-background">
-      <div className="flex items-center justify-between p-2 border border-border rounded-lg">
+    <div className="flex h-full flex-col gap-4 p-4 bg-card">
+      <div className="flex items-center justify-between p-2">
         <UserAvatar />
       </div>
       <nav className="flex flex-col gap-2 px-2">
@@ -73,7 +74,7 @@ export function AppSidebar() {
               "flex items-center gap-4 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-300",
               "hover:bg-foreground/10",
               pathname === item.href
-                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                ? "bg-primary text-primary-foreground hover:bg-primary/80"
                 : "text-muted-foreground"
             )}
           >
@@ -81,6 +82,9 @@ export function AppSidebar() {
             <span>{item.title}</span>
           </Link>
         ))}
+        <div className="mt-4 w-full">
+          <CreatePost />
+        </div>
       </nav>
     </div>
   );

@@ -21,3 +21,19 @@ export async function getVerificationTokenByEmail(email: string) {
     return null;
   }
 }
+
+export async function deleteVerificationToken(token: string) {
+  return await db.verificationToken.delete({
+    where: { token },
+  });
+}
+
+export async function createVerificationToken(data: {
+  email: string;
+  token: string;
+  expiresAt: Date;
+}) {
+  return await db.verificationToken.create({
+    data,
+  });
+}

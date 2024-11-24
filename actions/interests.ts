@@ -1,10 +1,18 @@
 "use server";
 
-import { getInterests } from "@/data/interests";
+import { db } from "@/lib/db";
 
-export async function fetchInterests() {
+export async function getInterests() {
   try {
-    const interests = await getInterests();
+    const interests = await db.interest.findMany({
+      include: {
+        _count: {
+          select: {
+            posts: true,
+          },
+        },
+      },
+    });
     return interests;
   } catch (error) {
     throw new Error("Failed to fetch interests");

@@ -1,7 +1,7 @@
 import { signIn } from "next-auth/react";
+import { FaGoogle } from "react-icons/fa";
 
-import { Button } from "../ui/button";
-import { Icons } from "../icons";
+import { Button } from "@/components/ui/button";
 
 export function GoogleLoginButton() {
   const onClick = () => {
@@ -10,7 +10,7 @@ export function GoogleLoginButton() {
 
   return (
     <Button variant="outline" className="w-full" onClick={onClick}>
-      <Icons.google className="mr-2 size-4" />
+      <FaGoogle className="mr-2 size-4" />
       Continuar com Google
     </Button>
   );

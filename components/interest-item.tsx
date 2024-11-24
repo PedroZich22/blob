@@ -21,7 +21,8 @@ export function InterestItem({
       onClick={onClick}
       variant="outline"
       type="button"
-      className={cn(selected && "bg-primary/50 hover:bg-primary/30")}
+      className={"data-[selected=true]:bg-primary/50 hover:bg-primary/30"}
+      data-selected={selected}
     >
       <span>#{interest.name}</span>
       {interest.count && (

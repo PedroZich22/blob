@@ -1,4 +1,4 @@
-import "./globals.css";
+import "@/styles/globals.css";
 
 import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
@@ -17,7 +17,7 @@ export const metadata = {
   title: siteConfig.name,
   description: siteConfig.description,
   icons: {
-    icon: "/blob.ico",
+    icon: "/bolhas-de-sabao.svg",
   },
   keywords: ["blob", "social media", "simple", "twitter", "x"],
 };

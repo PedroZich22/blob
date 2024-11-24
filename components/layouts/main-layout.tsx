@@ -8,6 +8,9 @@ import { TrendingTopics } from "../trending-topics";
 import { SearchInput } from "../search-input";
 import { UserSuggestions } from "../user-suggestions";
 import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Separator } from "../ui/separator";
+import { SiteHeader } from "../site-header";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -19,18 +22,11 @@ export function MainLayout({ children }: MainLayoutProps) {
       <div className="flex min-h-screen bg-gradient-to-b from-background/95 to-background">
         <AppSidebar />
 
-        <SidebarInset>{children}</SidebarInset>
+        <SidebarInset className="w-[1000px]">{children}</SidebarInset>
 
         <aside className="hidden lg:flex lg:w-[350px] flex-col gap-4 pl-8 pr-4 py-6 sticky top-0 h-screen overflow-y-auto">
           <SearchInput />
-          <div className="rounded-xl bg-card p-4 shadow-sm">
-            <h2 className="font-semibold mb-3">Tópicos em alta</h2>
-            <TrendingTopics />
-          </div>
-          <div className="rounded-xl bg-card p-4 shadow-sm">
-            <h2 className="font-semibold mb-3">Quem seguir</h2>
-            <UserSuggestions />
-          </div>
+          <UserSuggestions />
         </aside>
 
         <MobileNavigation />

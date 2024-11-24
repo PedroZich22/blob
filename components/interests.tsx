@@ -15,12 +15,16 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { InterestItem } from "./interest-item";
-import { useInterests } from "@/hooks/use-interests";
+import { getInterests } from "@/actions/interests";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 export function Interests() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const { data: interests } = useInterests();
+  const { data: interests } = useQuery({
+    queryKey: ["interests"],
+    queryFn: () => getInterests(),
+  });
 
   function handleInterestClick(id: string) {
     if (selectedInterests.includes(id)) {
@@ -51,7 +55,7 @@ export function Interests() {
                     <TooltipContent>
                       <p className="font-medium">#{item.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {item.count.toLocaleString("pt-BR")} posts
+                        {item._count.posts.toLocaleString("pt-BR")} posts
                       </p>
                     </TooltipContent>
                   </Tooltip>

@@ -13,6 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export function RegisterForm() {
   const { CurrentForm, currentStepTitle, currentStepDescription } =
@@ -29,13 +32,22 @@ export function RegisterForm() {
         <CardContent>
           <CurrentForm />
         </CardContent>
-        <CardFooter>
+        <CardFooter className="flex flex-col">
           <MultiStepNavButtons
             context={RegisterFormContext}
             nextLabel="Continuar"
             previousLabel="Voltar"
             endStepLabel="Finalizar"
           />
+          <div className="py-4 w-full">
+            <Separator />
+          </div>
+          <div className="flex items-center justify-center text-sm text-muted-foreground">
+            <p>Já tem uma conta?&nbsp;</p>
+            <Button variant="link" className="p-0" asChild>
+              <Link href="/auth/login">Faça login</Link>
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </MultiStepForm>

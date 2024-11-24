@@ -12,7 +12,8 @@ import { RegisterStepProfile } from "./register-steps/step-profile";
 import { buildMultiStepForm } from "@/lib/multi-step-form-builder";
 import { RegisterSchema } from "@/lib/schemas";
 import { AVATAR_COLORS, AVATAR_ICONS } from "@/constants/avatar-options";
-import { register } from "@/actions/register";
+import { register } from "@/actions/auth/register";
+import { redirect } from "next/navigation";
 
 export type RegisterFormType = z.infer<typeof RegisterSchema>;
 
@@ -28,7 +29,18 @@ export const initialFormData: RegisterFormType = {
 };
 
 const saveFormData: SubmitHandler<RegisterFormType> = async (values) => {
-  console.log("Saving form data", values);
+  try {
+    await register(values).then((result) => {
+      if (result?.error) {
+        console.error(result.error);
+        return;
+      }
+
+      redirect("/auth/login");
+    });
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 export const forms: Form<RegisterFormType>[] = [

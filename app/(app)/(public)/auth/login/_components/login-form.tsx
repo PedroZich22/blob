@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useForm } from "react-hook-form";
-import { login } from "@/actions/login";
+import { login } from "@/actions/auth/login";
 import { Button } from "@/components/ui/button";
 import {
   FormField,
@@ -21,88 +21,96 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 import { LoginSchema } from "@/lib/schemas";
+import { GoogleLoginButton } from "../../_components/google-login-button";
+
+type LoginFormValues = z.infer<typeof LoginSchema>;
 
 export function LoginForm() {
   const { toast } = useToast();
-
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof LoginSchema>>({
+  const form = useForm<LoginFormValues>({
     resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    startTransition(() => {
-      login(values).then((result) => {
-        if (result?.error) {
-          toast({
-            variant: "destructive",
-            title: "Erro ao realizar login",
-            description: result.error,
-          });
-        }
+  const onSubmit = (values: LoginFormValues) => {
+    startTransition(async () => {
+      const result = await login(values);
 
-        if (result?.success) {
-          toast({
-            variant: "success",
-            title: "Login realizado com sucesso",
-            description: result.success,
-          });
-        }
-      });
+      if (result?.error) {
+        toast({
+          variant: "destructive",
+          title: "Erro ao realizar login",
+          description: result.error,
+        });
+      }
+
+      if (result?.success) {
+        toast({
+          variant: "success",
+          title: "Login realizado com sucesso",
+          description: result.success,
+        });
+      }
     });
   };
-
   return (
-    <div>
+    <div className="space-y-4">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isPending}
-                    placeholder="Digite seu email"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Senha</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={isPending}
-                    placeholder="Digite sua senha"
-                    type="password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button disabled={isPending} type="submit" className="w-full">
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-4">
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      placeholder="Digite seu email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      placeholder="Digite sua senha"
+                      type="password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button disabled={isPending} type="submit" className="w-full mt-6">
             {isPending ? "Entrando..." : "Entrar"}
           </Button>
         </form>
       </Form>
-      <div className="py-4">
+      <div className="py-2">
         <Separator />
       </div>
+      <GoogleLoginButton />
       <div className="flex items-center justify-center text-sm text-muted-foreground">
-        <p>Não tem uma conta?</p>
-        <Button variant="link" asChild>
+        <p>Não tem uma conta?&nbsp;</p>
+        <Button variant="link" className="p-0" asChild>
           <Link href="/auth/register">Registre-se</Link>
         </Button>
       </div>

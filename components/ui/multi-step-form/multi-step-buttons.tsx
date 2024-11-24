@@ -29,7 +29,7 @@ export function MultiStepNavButtons<
         type="button"
         variant="outline"
         onClick={previousStep}
-        className={cn(`${isFirstStep ? "invisible" : "visible"}`, "w-full")}
+        className={cn(`${isFirstStep ? "hidden" : "flex"}`, "w-full")}
       >
         {previousLabel}
       </Button>

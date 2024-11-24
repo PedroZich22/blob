@@ -14,11 +14,7 @@ import { fetchInterests } from "@/actions/interests";
 
 export function RegisterStepInterests() {
   const form = useFormContext();
-  const {
-    data: interests,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: interests, isLoading } = useQuery({
     queryKey: ["interests"],
     queryFn: () => fetchInterests(),
   });
@@ -26,8 +22,6 @@ export function RegisterStepInterests() {
   if (isLoading) {
     return <InterestItemsSkeleton />;
   }
-
-  if (error) return "An error has occurred: " + error.message;
 
   function handleSelectInterest(id: string) {
     const currentInterests = form.getValues("interests") || [];
@@ -83,11 +77,9 @@ export function RegisterStepInterests() {
 function InterestItemsSkeleton() {
   return (
     <div className="flex flex-row flex-wrap items-start space-y-0 gap-2">
-      <InterestItemSkeleton />
-      <InterestItemSkeleton />
-      <InterestItemSkeleton />
-      <InterestItemSkeleton />
-      <InterestItemSkeleton />
+      {Array.from({ length: 4 }).map((_, i) => (
+        <InterestItemSkeleton key={i} />
+      ))}
     </div>
   );
 }
