@@ -3,6 +3,7 @@ import { Slot, Slottable } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
@@ -17,7 +18,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-foreground/10 hover:text-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        link: "group relative text-primary underline-offset-4 hover:underline p-0",
         expandIcon:
           "group relative text-primary-foreground bg-primary hover:bg-primary/90",
         ringHover:
@@ -48,7 +49,7 @@ const buttonVariants = cva(
 );
 
 interface IconProps {
-  Icon: React.ElementType;
+  Icon: LucideIcon;
   iconPlacement: "left" | "right";
 }
 
@@ -90,13 +91,13 @@ const Button = React.forwardRef<
       >
         {Icon && iconPlacement === "left" && (
           <div className="w-0 translate-x-[0%] pr-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-100 group-hover:pr-2 group-hover:opacity-100">
-            <Icon />
+            <Icon className="size-4" />
           </div>
         )}
         <Slottable>{props.children}</Slottable>
         {Icon && iconPlacement === "right" && (
           <div className="w-0 translate-x-[100%] pl-0 opacity-0 transition-all duration-200 group-hover:w-5 group-hover:translate-x-0 group-hover:pl-2 group-hover:opacity-100">
-            <Icon />
+            <Icon className="size-4" />
           </div>
         )}
       </Comp>

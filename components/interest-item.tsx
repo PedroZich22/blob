@@ -4,9 +4,10 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { formatCompactNumber } from "@/lib/formatter";
 import { Skeleton } from "./ui/skeleton";
+import { ExtendedInterest } from "@/types/db";
 
 interface InterestItemProps {
-  interest: any;
+  interest: Partial<ExtendedInterest>;
   selected: boolean;
   onClick: () => void;
 }
@@ -25,11 +26,9 @@ export function InterestItem({
       data-selected={selected}
     >
       <span>#{interest.name}</span>
-      {interest.count && (
-        <span className="ml-1.5 text-muted-foreground">
-          {formatCompactNumber(interest.count)}
-        </span>
-      )}
+      <span className="ml-1.5 text-muted-foreground">
+        {interest._count?.posts}
+      </span>
     </Button>
   );
 }

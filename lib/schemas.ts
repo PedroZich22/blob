@@ -23,6 +23,7 @@ export const RegisterSchema = z.object({
     .refine(async (value) => (await getUserByUsername(value)) === null, {
       message: "Username já está em uso",
     }),
+  name: z.string().min(1, { message: "Insira seu nome na plataforma" }),
   password: z
     .string()
     .min(6, { message: "Senha deve ter no mínimo 6 caracteres" }),
@@ -57,5 +58,5 @@ export const EditProfileSchema = z.object({
 
 export const PostSchema = z.object({
   content: z.string().min(1, "O conteúdo do post é obrigatório"),
-  categories: z.array(z.string()),
+  interests: z.array(z.string()),
 });

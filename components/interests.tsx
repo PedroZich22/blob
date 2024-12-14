@@ -18,6 +18,7 @@ import { InterestItem } from "./interest-item";
 import { getInterests } from "@/actions/interests";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { formatCompactNumber } from "@/lib/formatter";
 
 export function Interests() {
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -55,7 +56,7 @@ export function Interests() {
                     <TooltipContent>
                       <p className="font-medium">#{item.name}</p>
                       <p className="text-xs text-muted-foreground">
-                        {item._count.posts.toLocaleString("pt-BR")} posts
+                        {formatCompactNumber(item._count.posts)} posts
                       </p>
                     </TooltipContent>
                   </Tooltip>

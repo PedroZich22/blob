@@ -6,17 +6,18 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { InterestItem, InterestItemSkeleton } from "@/components/interest-item";
 import { useQuery } from "@tanstack/react-query";
-import { fetchInterests } from "@/actions/interests";
+import { getInterests } from "@/actions/interests";
 
 export function RegisterStepInterests() {
   const form = useFormContext();
   const { data: interests, isLoading } = useQuery({
     queryKey: ["interests"],
-    queryFn: () => fetchInterests(),
+    queryFn: () => getInterests(),
   });
 
   if (isLoading) {
@@ -43,6 +44,7 @@ export function RegisterStepInterests() {
         name="interests"
         render={() => (
           <FormItem className="flex flex-row flex-wrap items-start space-y-0 gap-2">
+            <FormLabel />
             {interests?.map((interest) => (
               <FormField
                 key={interest.id}

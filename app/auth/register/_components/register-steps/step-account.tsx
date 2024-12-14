@@ -31,12 +31,25 @@ export function RegisterStepAccount() {
       />
       <FormField
         control={form.control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Nome</FormLabel>
+            <FormControl>
+              <Input {...field} placeholder="Digite seu nome" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
         name="username"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Nome de usuário</FormLabel>
             <FormControl>
-              <Input placeholder="Digite seu nome de usuário" {...field} />
+              <Input placeholder="Digite seu nome de @usuário" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

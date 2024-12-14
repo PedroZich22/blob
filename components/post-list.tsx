@@ -1,17 +1,28 @@
 "use client";
 
-import { Post } from "@prisma/client";
 import { PostItem } from "./post-item";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
+import { getPosts } from "@/actions/post";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
-interface PostFeedProps {
-  posts: Post[];
-}
+export function PostFeed() {
+  const user = useCurrentUser();
+  const userId = user?.id;
 
-export function PostFeed({ posts }: PostFeedProps) {
+  const { data: posts, isPending } = useQuery({
+    queryKey: ["post"],
+    queryFn: () => getPosts(userId),
+    enabled: !!userId,
+  });
+
+  if (isPending) {
+    return <PostFeedSkeleton />;
+  }
+
   return (
-    <div className="space-y-4 divide-y divide-border/40 pb-16 lg:pb-0">
-      {posts.map((post) => (
+    <div className="space-y-4 divide-y divide-border/40 p-4 pb-16 lg:pb-0">
+      {posts?.map((post) => (
         <PostItem key={post.id} post={post} />
       ))}
     </div>

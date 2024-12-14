@@ -7,6 +7,7 @@ import { RegisterSchema } from "@/lib/schemas";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
 import { createUser, getUserByEmail, getUserByUsername } from "@/actions/user";
+import { redirect } from "next/navigation";
 
 type RegisterFormData = z.infer<typeof RegisterSchema>;
 
@@ -34,5 +35,6 @@ export async function register(values: RegisterFormData) {
   const verificationToken = await generateVerificationToken(email);
   await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
+  redirect("/auth/success");
   return { success: "Confira seu email para verificar sua conta" };
 }

@@ -6,7 +6,7 @@ import { RegisterForm } from "./register-form";
 export function RegisterWizard() {
   return (
     <RegisterProvider>
-      <RegisterForm />
+      <RegisterForm />;
     </RegisterProvider>
   );
 }

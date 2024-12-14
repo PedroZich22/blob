@@ -1,9 +1,9 @@
 "use client";
 
+import { z } from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "@/hooks/use-toast";
 import {
   Form,
@@ -13,15 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { PostSchema } from "@/lib/schemas";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { createPost } from "@/actions/post";
@@ -39,13 +31,16 @@ import {
 } from "./ui/dialog";
 import { Textarea } from "./ui/textarea";
 import { PencilLine } from "lucide-react";
+import { useSidebar } from "./ui/sidebar";
 
 type PostSchemaData = z.infer<typeof PostSchema>;
 
 export function CreatePost() {
   const currentUser = useCurrentUser();
+  const queryClient = useQueryClient();
+  const { open } = useSidebar();
 
-  if (!currentUser) return;
+  // if (!currentUser) return;
 
   const { data: interests } = useQuery({
     queryKey: ["interest"],
@@ -56,14 +51,15 @@ export function CreatePost() {
     resolver: zodResolver(PostSchema),
     defaultValues: {
       content: "",
-      categories: [],
+      interests: [],
     },
   });
 
-  const { mutate: create, isPending } = useMutation({
+  const { mutate: create } = useMutation({
     mutationFn: (variables: { userId: string; data: PostSchemaData }) =>
       createPost(variables.userId, variables.data),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["post"] });
       toast({
         variant: "success",
         title: "Post criado com sucesso",
@@ -83,7 +79,7 @@ export function CreatePost() {
 
   function onSubmit(data: PostSchemaData) {
     if (!currentUser?.id) return;
-
+    console.log(data);
     create({ userId: currentUser.id, data });
   }
 
@@ -96,7 +92,7 @@ export function CreatePost() {
     <Dialog>
       <DialogTrigger asChild>
         <Button type="button" variant="gooeyRight" className="w-full">
-          Postar
+          {open && "Postar"}
           <PencilLine className="size-4 ml-2" />
         </Button>
       </DialogTrigger>
@@ -111,16 +107,19 @@ export function CreatePost() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="categories"
-              render={({ field }) => (
+              name="interests"
+              render={() => (
                 <FormItem>
                   <FormLabel>Categorias</FormLabel>
                   <FormControl>
                     <Controller
                       control={form.control}
-                      name="categories"
-                      render={({ field }) => (
-                        <MultipleSelector defaultOptions={mapInterests} />
+                      name="interests"
+                      render={() => (
+                        <MultipleSelector
+                          emptyIndicator="Vazio."
+                          defaultOptions={mapInterests}
+                        />
                       )}
                     />
                   </FormControl>

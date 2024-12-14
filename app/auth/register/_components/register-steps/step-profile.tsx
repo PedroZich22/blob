@@ -17,17 +17,26 @@ import { useAvatar } from "@/hooks/use-avatar";
 export function RegisterStepProfile() {
   const form = useFormContext();
 
-  const [iconId, colorId] = form.watch(["avatar.icon", "avatar.color"]);
+  const [iconId, colorId, username, name] = form.watch([
+    "avatar.icon",
+    "avatar.color",
+    "username",
+    "name",
+  ]);
   const { Icon, color } = useAvatar({ iconId, colorId });
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
         <Avatar size="lg">
           <AvatarFallback className={cn(color)}>
             {Icon && <Icon className="size-full" />}
           </AvatarFallback>
         </Avatar>
+        <div className="flex flex-col">
+          <span className="text-medium">{name}</span>
+          <span className="text-xs text-muted-foreground">@{username}</span>
+        </div>
       </div>
       <FormField
         control={form.control}

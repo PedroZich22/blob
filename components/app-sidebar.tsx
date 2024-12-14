@@ -1,24 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import {
-  Home,
-  Search,
-  Bell,
-  Settings,
-  User,
-  Menu,
-  LucideIcon,
-} from "lucide-react";
+import { Home, Search, Bell, Settings, User, LucideIcon } from "lucide-react";
 
-import { UserAvatar } from "./user-avatar";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { NavUser } from "./nav-user";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { CreatePost } from "./create-post";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "./ui/sidebar";
 
 type SidebarNavItem = {
   href: string;
@@ -26,8 +25,7 @@ type SidebarNavItem = {
   icon: LucideIcon;
 };
 
-export function AppSidebar() {
-  const [isOpen, setIsOpen] = useState(false);
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const user = useCurrentUser();
 
@@ -59,56 +57,37 @@ export function AppSidebar() {
     },
   ];
 
-  const NavContent = () => (
-    <div className="flex h-full flex-col gap-4 p-4 bg-card">
-      <div className="flex items-center justify-between p-2">
-        <UserAvatar />
-      </div>
-      <nav className="flex flex-col gap-2 px-2">
-        {navigationItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            onClick={() => setIsOpen(false)}
-            className={cn(
-              "flex items-center gap-4 rounded-lg px-4 py-3 text-sm font-medium transition-all duration-300",
-              "hover:bg-foreground/10",
-              pathname === item.href
-                ? "bg-primary text-primary-foreground hover:bg-primary/80"
-                : "text-muted-foreground"
-            )}
-          >
-            <item.icon className="h-5 w-5" />
-            <span>{item.title}</span>
-          </Link>
-        ))}
-        <div className="mt-4 w-full">
-          <CreatePost />
-        </div>
-      </nav>
-    </div>
-  );
-
   return (
-    <>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="fixed left-4 top-4 z-40 lg:hidden"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="w-[300px] p-0">
-          <NavContent />
-        </SheetContent>
-      </Sheet>
-
-      <div className="hidden lg:block sticky top-0 h-screen w-[300px] border-r border-border/40">
-        <NavContent />
-      </div>
-    </>
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <NavUser />
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Menu</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {navigationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    size="lg"
+                    isActive={pathname === item.href}
+                    asChild
+                  >
+                    <Link href={item.href}>
+                      <item.icon className="size-5" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+            <SidebarGroup>
+              <CreatePost />
+            </SidebarGroup>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 }

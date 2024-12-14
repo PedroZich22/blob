@@ -15,7 +15,6 @@ export async function getUserByUsername(username: string) {
 export async function getUserById(id: string) {
   return await db.user.findUnique({
     include: {
-      posts: true,
       _count: {
         select: { followers: true, following: true },
       },
@@ -36,7 +35,10 @@ export async function getUsersFiltered(query: string) {
       },
     },
     where: {
-      OR: [{ username: { contains: query } }, { email: { contains: query } }],
+      OR: [
+        { username: { contains: query, mode: "insensitive" } },
+        { name: { contains: query, mode: "insensitive" } },
+      ],
     },
   });
 }

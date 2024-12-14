@@ -1,4 +1,4 @@
-import { User, type DefaultSession } from "next-auth";
+import { User } from "next-auth";
 
 type ExtendedUser = {
   id: string;

@@ -53,8 +53,8 @@ export function NewVerificationForm() {
           title: "Email confirmado com sucesso",
           description: result.success,
         });
-        router.push(DEFAULT_LOGIN_REDIRECT);
-        router.refresh();
+
+        router.push("/auth/login");
       }
     });
   }, [token, toast]);
@@ -75,11 +75,13 @@ export function NewVerificationForm() {
         )}
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button variant="link" asChild>
-          <Link href="/auth/login">
-            <ArrowLeftIcon className="size-4 mr-2" />
-            Voltar para o login
-          </Link>
+        <Button
+          variant="link"
+          Icon={ArrowLeftIcon}
+          iconPlacement="left"
+          asChild
+        >
+          <Link href="/auth/login">Voltar ao login</Link>
         </Button>
       </CardFooter>
     </Card>

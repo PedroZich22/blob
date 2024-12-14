@@ -38,70 +38,132 @@ model User {
   password      String?
   username      String?   @unique
   bio           String?
-  avatarIcon    String?   @default("user") // pensar nisso aq
-  avatarColor   String?   @default("cyan") // pensar nisso aq
+  avatarIcon    String?   @default("user")
+  avatarColor   String?   @default("cyan")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   accounts  Account[]
   posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  reposts   Repost[]
+  bookmarks Bookmark[]
   interests Interest[]
-  followers Follow[]   @relation("following")
-  following Follow[]   @relation("followers")
+  followers Follow[]   @relation("followers")
+  following Follow[]   @relation("following")
 }
 
 model Interest {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  color     String?
-  users     User[]
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users User[]
+  posts Post[]
 }
 
 model Post {
-  id        String     @id @default(cuid())
-  content   String     @db.Text
-  userId    String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isPublic  Boolean  @default(true)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   interests Interest[]
   likes     Like[]
   reposts   Repost[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  isPublic  Boolean    @default(true)
+  bookmarks Bookmark[]
+  comments   Comment[]
+
+  @@index([userId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isPublic  Boolean  @default(true)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  likes Like[]
+
+  @@index([userId])
+  @@index([postId])
 }
 
 model Like {
   id        String   @id @default(cuid())
-  postId    String
-  userId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
-  @@unique([postId, userId])
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId    String?
+  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@unique([userId, commentId])
+  @@index([userId])
+  @@index([postId])
+  @@index([commentId])
 }
 
 model Repost {
   id        String   @id @default(cuid())
-  postId    String
-  userId    String
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
-  @@unique([postId, userId])
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
 }
 
 model Follow {
-  id          String   @id @default(cuid())
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
   followerId  String
   followingId String
-  follower    User     @relation("followers", fields: [followerId], references: [id])
-  following   User     @relation("following", fields: [followingId], references: [id])
-  createdAt   DateTime @default(now())
+  follower    User   @relation("followers", fields: [followerId], references: [id])
+  following   User   @relation("following", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
 }
 
 model VerificationToken {

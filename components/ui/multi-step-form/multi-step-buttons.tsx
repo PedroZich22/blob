@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMultiStepForm } from "@/hooks/use-multi-step-form";
 import type { UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
+import { BubbleSpinner } from "../bubble-spinner";
 
 interface MultiStepNavButtonsProps<T> {
   previousLabel: string;
@@ -29,12 +30,12 @@ export function MultiStepNavButtons<
         type="button"
         variant="outline"
         onClick={previousStep}
-        className={cn(`${isFirstStep ? "hidden" : "flex"}`, "w-full")}
+        className={cn("w-full", isFirstStep ? "hidden" : "flex")}
       >
         {previousLabel}
       </Button>
       <Button type="submit" className="w-full">
-        {`${isLastStep ? endStepLabel : nextLabel}`}
+        {isLastStep ? endStepLabel : nextLabel}
       </Button>
     </div>
   );

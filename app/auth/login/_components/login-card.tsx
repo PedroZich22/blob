@@ -9,7 +9,7 @@ import { LoginForm } from "./login-form";
 
 export function LoginCard() {
   return (
-    <Card className="w-full md:w-[487px] shadow-lg h-full">
+    <Card className="w-full md:max-w-md mx-auto mt-10">
       <CardHeader>
         <CardTitle className="text-2xl">Bem-vindo de volta!</CardTitle>
         <CardDescription>

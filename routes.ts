@@ -1,20 +1,21 @@
 /**
- * An array of routes that are public and can be accessed without authentication.
- * @type {string[]}
- */
-export const publicRoutes = [
-  "/auth/new-verification",
-  "/auth/login",
-  "/auth/register",
-  "/auth/error",
-];
-
-/**
  * An array of routes that are used for authentication.
  * These routes will redirect logged in users to /
  * @type {string[]}
  */
-export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
+export const authRoutes = [
+  "/auth/new-verification",
+  "/auth/login",
+  "/auth/register",
+  "/auth/error",
+  "/auth/success",
+];
+
+/**
+ * An array of routes that are public and can be accessed without authentication.
+ * @type {string[]}
+ */
+export const publicRoutes = [...authRoutes];
 
 /**
  * The prefix for API routes that are used for authentication.

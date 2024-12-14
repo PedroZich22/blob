@@ -1,26 +1,21 @@
 import { z } from "zod";
 
-import type {
-  Form,
-  UseMultiStepFormTypeOptions,
-} from "@/types/multi-step-form";
-import type { SubmitHandler } from "react-hook-form";
+import { AVATAR_COLORS, AVATAR_ICONS } from "@/constants/avatar-options";
+import { buildMultiStepForm } from "@/lib/multi-step-form-builder";
+import { RegisterSchema } from "@/lib/schemas";
+import { register } from "@/actions/auth/register";
+import { Form, UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
 import { RegisterStepAccount } from "./register-steps/step-account";
 import { RegisterStepInterests } from "./register-steps/step-interests";
 import { RegisterStepProfile } from "./register-steps/step-profile";
 
-import { buildMultiStepForm } from "@/lib/multi-step-form-builder";
-import { RegisterSchema } from "@/lib/schemas";
-import { AVATAR_COLORS, AVATAR_ICONS } from "@/constants/avatar-options";
-import { register } from "@/actions/auth/register";
-import { redirect } from "next/navigation";
+type RegisterFormType = z.infer<typeof RegisterSchema>;
 
-export type RegisterFormType = z.infer<typeof RegisterSchema>;
-
-export const initialFormData: RegisterFormType = {
+const initialFormData: RegisterFormType = {
   email: "",
   username: "",
   password: "",
+  name: "",
   avatar: {
     color: AVATAR_COLORS[0].id,
     icon: AVATAR_ICONS[0].id,
@@ -28,22 +23,7 @@ export const initialFormData: RegisterFormType = {
   interests: [],
 };
 
-const saveFormData: SubmitHandler<RegisterFormType> = async (values) => {
-  try {
-    await register(values).then((result) => {
-      if (result?.error) {
-        console.error(result.error);
-        return;
-      }
-
-      redirect("/auth/login");
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const forms: Form<RegisterFormType>[] = [
+const forms: Form<RegisterFormType>[] = [
   {
     id: 1,
     title: "Conta",
@@ -70,9 +50,9 @@ export const forms: Form<RegisterFormType>[] = [
 const initialFormOptions: UseMultiStepFormTypeOptions<RegisterFormType> = {
   schema: RegisterSchema,
   currentStep: 0,
-  setCurrentStep: (value) => {},
+  setCurrentStep: () => {},
   forms,
-  saveFormData,
+  saveFormData: register,
 };
 
 export const {

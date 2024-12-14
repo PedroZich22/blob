@@ -1,3 +1,5 @@
+"use server";
+
 import { db } from "@/lib/db";
 import { getUserByEmail } from "../user";
 import { getVerificationTokenByToken } from "./verification-token";

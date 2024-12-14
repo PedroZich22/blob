@@ -64,6 +64,7 @@ export function SearchInput() {
       <CommandDialog open={open} onOpenChange={setOpen}>
         <CommandInput
           placeholder="Digite o nome ou @username..."
+          className="py-2"
           value={query}
           onValueChange={setQuery}
         />
@@ -78,7 +79,7 @@ export function SearchInput() {
               >
                 <Avatar className="h-9 w-9">
                   <AvatarImage src={user.image ?? undefined} />
-                  <AvatarFallback>{user.name}</AvatarFallback>
+                  <AvatarFallback>{user.username}</AvatarFallback>
                 </Avatar>
                 <div className="flex flex-col flex-1 overflow-hidden">
                   <div className="flex items-center gap-1">
