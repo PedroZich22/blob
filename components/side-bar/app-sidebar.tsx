@@ -1,11 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import Link from "next/link";
-import { Home, Search, Bell, Settings, User, LucideIcon } from "lucide-react";
+import {
+  Home,
+  Search,
+  Settings,
+  User,
+  LucideIcon,
+  Bookmark,
+} from "lucide-react";
 
-import { NavUser } from "./nav-user";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { CreatePost } from "./create-post";
 import {
   Sidebar,
@@ -17,17 +20,22 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "./ui/sidebar";
+} from "../ui/sidebar";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { NavUser } from "./nav-user";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { usePathname } from "next/navigation";
 
-type SidebarNavItem = {
+export type SidebarNavItem = {
   href: string;
   title: string;
   icon: LucideIcon;
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const currentUser = useCurrentUser();
   const pathname = usePathname();
-  const user = useCurrentUser();
 
   const navigationItems: SidebarNavItem[] = [
     {
@@ -41,14 +49,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       href: "/search",
     },
     {
-      title: "Notificações",
-      icon: Bell,
-      href: "/notifications",
+      title: "Salvos",
+      icon: Bookmark,
+      href: "/bookmarks",
     },
     {
       title: "Perfil",
       icon: User,
-      href: `/profile/${user?.id}`,
+      href: `/profile/${currentUser?.id}`,
     },
     {
       title: "Configurações",
@@ -58,9 +66,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   ];
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar {...props} collapsible="icon">
       <SidebarHeader>
-        <NavUser />
+        {!currentUser ? (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                <SidebarMenuItem>
+                  <Button variant="shine" className="w-full" asChild>
+                    <Link href={"auth/login"}>Entrar no Blob!</Link>
+                  </Button>
+                </SidebarMenuItem>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ) : (
+          <NavUser user={currentUser} />
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -68,7 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem>
                   <SidebarMenuButton
                     size="lg"
                     isActive={pathname === item.href}
@@ -83,7 +105,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               ))}
             </SidebarMenu>
             <SidebarGroup>
-              <CreatePost />
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <CreatePost />
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarGroupContent>
             </SidebarGroup>
           </SidebarGroupContent>
         </SidebarGroup>

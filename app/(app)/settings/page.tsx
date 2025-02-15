@@ -9,10 +9,6 @@ export default async function SettingsPage() {
         <section>
           <ThemeSettings />
         </section>
-
-        <section>
-          <h2 className="text-lg font-semibold mb-4">Preferências</h2>
-        </section>
       </div>
     </div>
   );

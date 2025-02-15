@@ -6,7 +6,6 @@ import { RegisterSchema } from "@/lib/schemas";
 import { register } from "@/actions/auth/register";
 import { Form, UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
 import { RegisterStepAccount } from "./register-steps/step-account";
-import { RegisterStepInterests } from "./register-steps/step-interests";
 import { RegisterStepProfile } from "./register-steps/step-profile";
 
 type RegisterFormType = z.infer<typeof RegisterSchema>;
@@ -20,7 +19,6 @@ const initialFormData: RegisterFormType = {
     color: AVATAR_COLORS[0].id,
     icon: AVATAR_ICONS[0].id,
   },
-  interests: [],
 };
 
 const forms: Form<RegisterFormType>[] = [
@@ -37,13 +35,6 @@ const forms: Form<RegisterFormType>[] = [
     description: "Personalize seu avatar para deixar com a sua cara!",
     form: RegisterStepProfile,
     fields: ["avatar"],
-  },
-  {
-    id: 3,
-    title: "Interesses",
-    description: "O que gostaria de ver?",
-    form: RegisterStepInterests,
-    fields: ["interests"],
   },
 ];
 

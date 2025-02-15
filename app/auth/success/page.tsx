@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -17,7 +16,6 @@ export default function SuccessPage() {
         <CardTitle className="text-2xl">
           Sua conta foi criada com sucesso!
         </CardTitle>
-        <CardDescription>Seja bem-vindo à plataforma!</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col items-center justify-center gap-2">
         <BadgeCheck size={64} className="text-success" />

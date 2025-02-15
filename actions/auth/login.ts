@@ -3,10 +3,10 @@ import { getUserByEmail } from "@/actions/user";
 import { LoginSchema } from "@/lib/schemas";
 import { signIn } from "@/auth";
 import { z } from "zod";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export async function login(values: z.infer<typeof LoginSchema>) {
   const validatedValues = LoginSchema.safeParse(values);
@@ -28,14 +28,14 @@ export async function login(values: z.infer<typeof LoginSchema>) {
       verificationToken.token
     );
 
-    return { success: "Confira seu email para verificar sua conta" };
+    return { error: "Confira seu email para verificar sua conta" };
   }
 
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT,
+      redirect: false,
     });
   } catch (error) {
     if (error instanceof AuthError) {

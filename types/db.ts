@@ -1,29 +1,31 @@
-import { Post, User, Interest } from "@prisma/client";
+import { Blob, User, Interest, Comment } from "@prisma/client";
 
-export interface ExtendedPost extends Post {
+export type ExtendedComment = Comment & {
+  user: User;
+};
+
+export type ExtendedBlob = Blob & {
   user: User;
   interests: Interest[];
+  comments: Comment[];
   _count: {
     likes: number;
-    reposts: number;
     comments: number;
   };
   isLiked?: boolean;
-  isReposted?: boolean;
-}
+};
 
-export interface ExtendedUser extends User {
-  _count: {
-    followers: number;
-    following: number;
-    posts: number;
-  };
-  isFollowing?: boolean;
-}
+// export type ExtendedUser = User & {
+//   _count: {
+//     followers: number;
+//     following: number;
+//   };
+//   isFollowing?: boolean;
+// };
 
-export interface ExtendedInterest extends Interest {
+export type ExtendedInterest = Interest & {
   _count: {
-    posts: number;
+    blobs: number;
     users: number;
   };
-}
+};

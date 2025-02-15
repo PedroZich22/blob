@@ -15,7 +15,7 @@ export const authRoutes = [
  * An array of routes that are public and can be accessed without authentication.
  * @type {string[]}
  */
-export const publicRoutes = [...authRoutes];
+export const publicRoutes = [...authRoutes, "/"];
 
 /**
  * The prefix for API routes that are used for authentication.

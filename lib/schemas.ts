@@ -31,9 +31,6 @@ export const RegisterSchema = z.object({
     icon: z.string(),
     color: z.string(),
   }),
-  interests: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "Selecione pelo menos um interesse",
-  }),
 });
 
 export const EditProfileSchema = z.object({
@@ -56,7 +53,11 @@ export const EditProfileSchema = z.object({
   }),
 });
 
-export const PostSchema = z.object({
+export const BlobSchema = z.object({
   content: z.string().min(1, "O conteúdo do post é obrigatório"),
   interests: z.array(z.string()),
+});
+
+export const CommentSchema = z.object({
+  content: z.string().min(1).max(500),
 });

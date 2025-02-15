@@ -1,24 +1,10 @@
-"use client";
-
+import { auth } from "@/auth";
 import { LoginCard } from "./_components/login-card";
-import { useToast } from "@/hooks/use-toast";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
-  const { toast } = useToast();
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error");
-
-  useEffect(() => {
-    if (error === "OAuthAccountNotLinked") {
-      toast({
-        variant: "destructive",
-        title: "Conta Google já vinculada",
-        description: "Conta Google já cadastrada, faça login com o Google",
-      });
-    }
-  }, [error, toast]);
+export default async function LoginPage() {
+  const session = await auth();
+  if (session) redirect("/");
 
   return <LoginCard />;
 }

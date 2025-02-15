@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
 const avatarVariants = cva(
-  "relative flex shrink-0 overflow-hidden rounded-full",
+  "relative flex shrink-0 overflow-hidden border-muted",
   {
     variants: {
       size: {
@@ -16,6 +16,7 @@ const avatarVariants = cva(
         lg: "h-12 w-12",
         xl: "h-16 w-16",
         "2xl": "h-20 w-20",
+        "4xl": "h-32 w-32",
       },
       shape: {
         circle: "rounded-full",
@@ -30,16 +31,14 @@ const avatarVariants = cva(
     },
     defaultVariants: {
       size: "default",
-      shape: "circle",
+      shape: "square",
       border: "none",
     },
   }
 );
 
-const avatarImageVariants = cva("aspect-square h-full w-full");
-
 const avatarFallbackVariants = cva(
-  "flex h-full w-full items-center justify-center rounded-full bg-muted",
+  "flex h-full w-full items-center justify-center bg-muted",
   {
     variants: {
       size: {
@@ -48,6 +47,7 @@ const avatarFallbackVariants = cva(
         lg: "text-base p-2",
         xl: "text-lg p-3",
         "2xl": "text-xl p-3",
+        "4xl": "text-2xl p-4",
       },
     },
   }
@@ -58,18 +58,18 @@ const AvatarContext = React.createContext<AvatarContextValue>({
   size: "default",
 });
 
-interface AvatarProps
+export interface AvatarProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof avatarVariants> {}
 
 const Avatar = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Root>,
   AvatarProps
->(({ className, size, ...props }, ref) => (
+>(({ className, size, border, shape, ...props }, ref) => (
   <AvatarContext.Provider value={{ size }}>
     <AvatarPrimitive.Root
       ref={ref}
-      className={cn(avatarVariants({ className, size }))}
+      className={cn(avatarVariants({ size, border, shape }), className)}
       {...props}
     />
   </AvatarContext.Provider>
@@ -82,7 +82,7 @@ const AvatarImage = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Image
     ref={ref}
-    className={cn(avatarImageVariants({ className }))}
+    className={cn("aspect-square h-full w-full", className)}
     {...props}
   />
 ));
@@ -97,7 +97,7 @@ const AvatarFallback = React.forwardRef<
   return (
     <AvatarPrimitive.Fallback
       ref={ref}
-      className={cn(avatarFallbackVariants({ className, size }))}
+      className={cn(avatarFallbackVariants({ size }), className)}
       {...props}
     />
   );

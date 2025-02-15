@@ -22,11 +22,13 @@ import Link from "next/link";
 
 import { LoginSchema } from "@/lib/schemas";
 import { GoogleLoginButton } from "../../_components/google-login-button";
+import { useRouter } from "next/navigation";
 
 type LoginFormValues = z.infer<typeof LoginSchema>;
 
 export function LoginForm() {
   const { toast } = useToast();
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<LoginFormValues>({
@@ -49,15 +51,18 @@ export function LoginForm() {
         });
       }
 
-      if (result?.success) {
-        toast({
-          variant: "success",
-          title: "Login realizado com sucesso",
-          description: result.success,
-        });
-      }
+      toast({
+        variant: "success",
+        title: "Login realizado com sucesso",
+        description: result.success,
+      });
+
+      console.log("Login realizado com sucesso");
+
+      router.push("/");
     });
   };
+
   return (
     <div className="space-y-4">
       <Form {...form}>

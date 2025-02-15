@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -21,11 +20,8 @@ export default function NotFound() {
           </CardDescription>
         </CardHeader>
         <CardFooter>
-          <Button variant="link" asChild>
-            <Link href="/">
-              <ArrowLeft className="size-4 mr-2" />
-              Voltar para a página inicial
-            </Link>
+          <Button variant="link" iconPlacement="left" Icon={ArrowLeft} asChild>
+            <Link href="/">Voltar para a página inicial</Link>
           </Button>
         </CardFooter>
       </Card>

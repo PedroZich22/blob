@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { formatCompactNumber } from "@/lib/formatter";
 import { Skeleton } from "./ui/skeleton";
 import { ExtendedInterest } from "@/types/db";
 
@@ -25,7 +24,7 @@ export function InterestItem({
       className={"data-[selected=true]:bg-primary/50 hover:bg-primary/30"}
       data-selected={selected}
     >
-      <span>#{interest.name}</span>
+      <span className="truncate">#{interest.name}</span>
       <span className="ml-1.5 text-muted-foreground">
         {interest._count?.posts}
       </span>

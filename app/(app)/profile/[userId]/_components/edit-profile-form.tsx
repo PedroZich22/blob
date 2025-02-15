@@ -34,7 +34,7 @@ export function EditProfileForm({ user }: { user: User }) {
 
   const { mutate } = useMutation({
     mutationFn: (variables: { userId: string; user: EditProfileFormValues }) =>
-      updateUser(variables.userId, variables.user),
+      updateUser({ userId: variables.userId, user: variables.user }),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["user", variables.userId] });
     },

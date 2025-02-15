@@ -1,4 +1,4 @@
-import { UserProfile } from "@/app/(app)/(protected)/profile/[userId]/_components/user-profile";
+import { UserProfile } from "./_components/user-profile";
 
 export default async function UserPage({
   params,

@@ -10,8 +10,7 @@ export function formatCompactNumber(num: number): string {
 
 export function formatDateDistanceToNowWithSuffix(date: Date): string {
   return formatDistanceToNow(date, {
-      addSuffix: true,
-      locale: ptBR,
-    }
-  )
+    addSuffix: true,
+    locale: ptBR,
+  });
 }

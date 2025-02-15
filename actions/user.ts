@@ -1,8 +1,16 @@
 "use server";
 
 import { z } from "zod";
-import { db } from "@/lib/db";
 import { EditProfileSchema, RegisterSchema } from "@/lib/schemas";
+import { db } from "@/lib/db";
+
+type RegisterSchemaData = z.infer<typeof RegisterSchema>;
+type EditProfileSchemaData = z.infer<typeof EditProfileSchema>;
+
+interface UpdateProfileData {
+  user: EditProfileSchemaData;
+  userId: string;
+}
 
 export async function getUserByEmail(email: string) {
   return await db.user.findUnique({ where: { email } });
@@ -13,14 +21,7 @@ export async function getUserByUsername(username: string) {
 }
 
 export async function getUserById(id: string) {
-  return await db.user.findUnique({
-    include: {
-      _count: {
-        select: { followers: true, following: true },
-      },
-    },
-    where: { id },
-  });
+  return await db.user.findUnique({ where: { id } });
 }
 
 export async function getUsers() {
@@ -29,11 +30,6 @@ export async function getUsers() {
 
 export async function getUsersFiltered(query: string) {
   return await db.user.findMany({
-    include: {
-      _count: {
-        select: { followers: true, following: true },
-      },
-    },
     where: {
       OR: [
         { username: { contains: query, mode: "insensitive" } },
@@ -43,7 +39,7 @@ export async function getUsersFiltered(query: string) {
   });
 }
 
-export async function createUser(user: z.infer<typeof RegisterSchema>) {
+export async function createUser(user: RegisterSchemaData) {
   return await db.user.create({
     data: {
       email: user.email,
@@ -51,21 +47,11 @@ export async function createUser(user: z.infer<typeof RegisterSchema>) {
       password: user.password,
       avatarColor: user.avatar.color,
       avatarIcon: user.avatar.icon,
-      interests: {
-        connect: [
-          ...user.interests.map((interest) => ({
-            id: interest,
-          })),
-        ],
-      },
     },
   });
 }
 
-export async function updateUser(
-  userId: string,
-  user: z.infer<typeof EditProfileSchema>
-) {
+export async function updateUser({ user, userId }: UpdateProfileData) {
   return await db.user.update({
     data: {
       name: user.name,

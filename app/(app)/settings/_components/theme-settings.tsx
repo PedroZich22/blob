@@ -20,8 +20,9 @@ export function ThemeSettings() {
       <CardHeader>
         <CardTitle>Tema e Aparência</CardTitle>
         <CardDescription>
-          Escolha como você quer que o aplicativo apareça para você. 
-          Você pode escolher entre modo claro, escuro ou seguir as configurações do seu sistema.
+          Escolha como você quer que o aplicativo apareça para você. Você pode
+          escolher entre modo claro, escuro ou seguir as configurações do seu
+          sistema.
         </CardDescription>
       </CardHeader>
       <CardContent>

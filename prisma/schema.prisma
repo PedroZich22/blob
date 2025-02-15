@@ -11,7 +11,7 @@ datasource db {
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String  @map("user_id")
   type              String
   provider          String
@@ -29,8 +29,16 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
-  id            String    @id @default(cuid())
+  id            String    @id @default(uuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
@@ -38,136 +46,78 @@ model User {
   password      String?
   username      String?   @unique
   bio           String?
-  avatarIcon    String?   @default("user")
-  avatarColor   String?   @default("cyan")
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  avatarIcon    String?   @default("user") @map("avatar_icon")
+  avatarColor   String?   @default("cyan") @map("avatar_color")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  accounts  Account[]
-  posts     Post[]
-  comments  Comment[]
-  likes     Like[]
-  reposts   Repost[]
-  bookmarks Bookmark[]
-  interests Interest[]
-  followers Follow[]   @relation("followers")
-  following Follow[]   @relation("following")
+  accounts Account[]
+  sessions Session[]
+
+  blobs    Blob[]
+  comments Comment[]
+  likes    Like[]
 }
 
 model Interest {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   name        String   @unique
   description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
-  users User[]
-  posts Post[]
+  blobs Blob[]
 }
 
-model Post {
-  id        String   @id @default(cuid())
+model Blob {
+  id        String   @id @default(uuid())
   content   String   @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isPublic  Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId String
+  userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   interests Interest[]
   likes     Like[]
-  reposts   Repost[]
-  bookmarks Bookmark[]
-  comments   Comment[]
+  comments  Comment[]
 
   @@index([userId])
 }
 
 model Comment {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   content   String   @db.Text
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  isPublic  Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  userId String
+  userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  postId String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  likes Like[]
+  blobId String @map("blob_id")
+  blob   Blob   @relation(fields: [blobId], references: [id], onDelete: Cascade)
 
   @@index([userId])
-  @@index([postId])
+  @@index([blobId])
 }
 
 model Like {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
 
-  userId String
+  userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  postId    String?
-  post      Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  commentId String?
-  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  blobId String? @map("blob_id")
+  blob   Blob?   @relation(fields: [blobId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, postId])
-  @@unique([userId, commentId])
+  @@unique([userId, blobId])
   @@index([userId])
-  @@index([postId])
-  @@index([commentId])
-}
-
-model Repost {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  postId String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, postId])
-  @@index([userId])
-  @@index([postId])
-}
-
-model Bookmark {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  postId String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-
-  @@unique([userId, postId])
-  @@index([userId])
-  @@index([postId])
-}
-
-model Follow {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  followerId  String
-  followingId String
-  follower    User   @relation("followers", fields: [followerId], references: [id])
-  following   User   @relation("following", fields: [followingId], references: [id])
-
-  @@unique([followerId, followingId])
-  @@index([followerId])
-  @@index([followingId])
+  @@index([blobId])
 }
 
 model VerificationToken {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   email     String
   token     String   @unique
   expiresAt DateTime

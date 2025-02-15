@@ -10,12 +10,11 @@ import {
 } from "@/components/ui/card";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useTransition } from "react";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { newVerification } from "@/actions/auth/new-verification";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { BubbleSpinner } from "@/components/ui/bubble-spinner";
 
 export function NewVerificationForm() {
@@ -57,7 +56,7 @@ export function NewVerificationForm() {
         router.push("/auth/login");
       }
     });
-  }, [token, toast]);
+  }, [token, toast, router]);
 
   return (
     <Card className="w-full md:w-[487px] shadow-lg h-full">
@@ -75,12 +74,7 @@ export function NewVerificationForm() {
         )}
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button
-          variant="link"
-          Icon={ArrowLeftIcon}
-          iconPlacement="left"
-          asChild
-        >
+        <Button variant="link" Icon={ArrowLeft} iconPlacement="left" asChild>
           <Link href="/auth/login">Voltar ao login</Link>
         </Button>
       </CardFooter>

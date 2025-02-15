@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export function ErrorCard() {
   return (
@@ -19,11 +19,8 @@ export function ErrorCard() {
         </CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-center">
-        <Button variant="link" asChild>
-          <Link href="/auth/login">
-            <ArrowLeftIcon className="size-4 mr-2" />
-            Voltar para o login
-          </Link>
+        <Button variant="link" Icon={ArrowLeft} iconPlacement="left" asChild>
+          <Link href="/auth/login">Voltar ao login</Link>
         </Button>
       </CardFooter>
     </Card>

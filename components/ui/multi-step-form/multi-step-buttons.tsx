@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useMultiStepForm } from "@/hooks/use-multi-step-form";
 import type { UseMultiStepFormTypeOptions } from "@/types/multi-step-form";
-import { BubbleSpinner } from "../bubble-spinner";
 
 interface MultiStepNavButtonsProps<T> {
   previousLabel: string;

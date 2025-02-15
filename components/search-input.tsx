@@ -22,13 +22,12 @@ export function SearchInput() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const debouncerdQuery = useDebounce(query, 1000);
+  const debouncedQuery = useDebounce(query);
 
-  // TODO: Paginar resultados
   const { data: filteredUsers } = useQuery({
-    enabled: open,
-    queryKey: ["search", debouncerdQuery],
-    queryFn: () => getUsersFiltered(debouncerdQuery),
+    enabled: open && !!debouncedQuery,
+    queryKey: ["search", debouncedQuery],
+    queryFn: () => getUsersFiltered(debouncedQuery),
   });
 
   useEffect(() => {
@@ -70,14 +69,14 @@ export function SearchInput() {
         />
         <CommandList>
           <CommandEmpty>Nenhum usuário encontrado.</CommandEmpty>
-          <CommandGroup heading="Pessoas" className="p-2">
+          <CommandGroup className="p-2">
             {filteredUsers?.map((user) => (
               <CommandItem
                 key={user.id}
                 onSelect={() => handleSelectUser(user.id)}
                 className="flex items-center gap-3 p-2 cursor-pointer"
               >
-                <Avatar className="h-9 w-9">
+                <Avatar className="h-9 w-9 rounded-md">
                   <AvatarImage src={user.image ?? undefined} />
                   <AvatarFallback>{user.username}</AvatarFallback>
                 </Avatar>
@@ -87,10 +86,6 @@ export function SearchInput() {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span className="truncate">@{user.username}</span>
-                    <span>·</span>
-                    <span className="truncate">
-                      {user._count.followers} seguidores
-                    </span>
                   </div>
                   <p className="text-xs text-muted-foreground truncate">
                     {user.bio}
