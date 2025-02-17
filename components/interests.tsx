@@ -63,38 +63,37 @@ export function Interests() {
   }
 
   return (
-    <div className="py-2 px-2 lg:px-4 mx-8 my-2">
-      <div className="px-2 lg:px-4">
-        <Carousel opts={{ align: "start" }} className="w-full">
+    <div className="px-6 py-2 mx-8">
+      <Carousel
+        opts={{ align: "start" }}
+        className="max-w-[calc(100vw-50rem)] w-full mx-auto"
+      >
+        <CarouselContent className="-ml-2 flex flex-nowrap">
           <TooltipProvider>
-            <CarouselContent className="-ml-2">
-              {interests?.map((item) => (
-                <CarouselItem key={item.id} className="pl-2 basis-auto">
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div>
-                        <InterestItem
-                          interest={item}
-                          onClick={() => handleInterestClick(item.id)}
-                          selected={selectedInterests.includes(item.id)}
-                        />
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="font-medium">#{item.name}</p>
-                      {/* <p className="text-xs text-muted-foreground">
-                        {formatCompactNumber(item._count.posts)} posts
-                      </p> */}
-                    </TooltipContent>
-                  </Tooltip>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="hidden lg:flex" />
-            <CarouselNext className="hidden lg:flex" />
+            {interests?.map((item) => (
+              <CarouselItem key={item.id} className="pl-2 basis-auto">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <InterestItem
+                      interest={item}
+                      onClick={() => handleInterestClick(item.id)}
+                      selected={selectedInterests.includes(item.id)}
+                    />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-medium">#{item.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatCompactNumber(item._count.blobs)} posts
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </CarouselItem>
+            ))}
           </TooltipProvider>
-        </Carousel>
-      </div>
+        </CarouselContent>
+        <CarouselPrevious className="hidden lg:flex" />
+        <CarouselNext className="hidden lg:flex" />
+      </Carousel>
     </div>
   );
 }

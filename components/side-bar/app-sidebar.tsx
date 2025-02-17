@@ -7,9 +7,10 @@ import {
   User,
   LucideIcon,
   Bookmark,
+  LogIn,
 } from "lucide-react";
 
-import { CreatePost } from "./create-post";
+import { CreateBlob } from "./create-blob";
 import {
   Sidebar,
   SidebarContent,
@@ -20,22 +21,24 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "../ui/sidebar";
-import { Button } from "../ui/button";
 import Link from "next/link";
 import { NavUser } from "./nav-user";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export type SidebarNavItem = {
   href: string;
   title: string;
   icon: LucideIcon;
+  auth?: boolean;
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const currentUser = useCurrentUser();
   const pathname = usePathname();
+  const router = useRouter();
 
   const navigationItems: SidebarNavItem[] = [
     {
@@ -52,11 +55,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "Salvos",
       icon: Bookmark,
       href: "/bookmarks",
+      auth: true,
     },
     {
       title: "Perfil",
       icon: User,
       href: `/profile/${currentUser?.id}`,
+      auth: true,
     },
     {
       title: "Configurações",
@@ -65,21 +70,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     },
   ];
 
+  function handleMenuClick(item: SidebarNavItem) {
+    if (item.auth && !currentUser) {
+      return router.push("/auth/login");
+    }
+
+    router.push(item.href);
+  }
+
   return (
-    <Sidebar {...props} collapsible="icon">
+    <Sidebar {...props} collapsible="icon" className="h-svh">
       <SidebarHeader>
         {!currentUser ? (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                <SidebarMenuItem>
-                  <Button variant="shine" className="w-full" asChild>
-                    <Link href={"auth/login"}>Entrar no Blob!</Link>
-                  </Button>
-                </SidebarMenuItem>
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                className="bg-primary text-primary-foreground hover:bg-primary/50 transition-all"
+                size={"lg"}
+                asChild
+              >
+                <Link href={"/auth/login"}>
+                  <LogIn className="size-5" />
+                  Entrar no Blob!
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         ) : (
           <NavUser user={currentUser} />
         )}
@@ -90,32 +106,33 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               {navigationItems.map((item) => (
-                <SidebarMenuItem>
+                <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
+                    className="transition-all"
                     size="lg"
                     isActive={pathname === item.href}
-                    asChild
+                    onClick={() => handleMenuClick(item)}
                   >
-                    <Link href={item.href}>
-                      <item.icon className="size-5" />
-                      <span>{item.title}</span>
-                    </Link>
+                    <item.icon className="size-5" />
+                    <span>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            <SidebarGroup>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  <SidebarMenuItem>
-                    <CreatePost />
-                  </SidebarMenuItem>
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Ações</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <CreateBlob />
+              </SidebarMenuItem>
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarRail />
     </Sidebar>
   );
 }

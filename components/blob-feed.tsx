@@ -1,15 +1,17 @@
 "use client";
 
-import { Skeleton } from "./ui/skeleton";
-import { Blob } from "./blob";
 import { useQuery } from "@tanstack/react-query";
-import { getBlobs } from "@/actions/blob";
+import { getBlobsFiltered } from "@/actions/blob";
 import { BlobList } from "./blob-list";
+import { useSearchParams } from "next/navigation";
 
 export function BlobFeed() {
+  const searchParams = useSearchParams();
+  const selectedInterests = searchParams.get("interests")?.split(",") || [];
+
   const { data: blobs } = useQuery({
-    queryKey: ["blob"],
-    queryFn: () => getBlobs(),
+    queryKey: ["blob", selectedInterests],
+    queryFn: () => getBlobsFiltered(selectedInterests),
   });
 
   return <BlobList blobs={blobs} />;

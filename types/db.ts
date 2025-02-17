@@ -7,12 +7,11 @@ export type ExtendedComment = Comment & {
 export type ExtendedBlob = Blob & {
   user: User;
   interests: Interest[];
-  comments: Comment[];
+  comments: ExtendedComment[];
   _count: {
     likes: number;
     comments: number;
   };
-  isLiked?: boolean;
 };
 
 // export type ExtendedUser = User & {
@@ -26,6 +25,5 @@ export type ExtendedBlob = Blob & {
 export type ExtendedInterest = Interest & {
   _count: {
     blobs: number;
-    users: number;
   };
 };

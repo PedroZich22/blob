@@ -49,19 +49,16 @@ export function RegisterStepProfile() {
               onValueChange={field.onChange}
               defaultValue={field.value}
             >
-              {AVATAR_ICONS.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <Label
-                    key={item.id}
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"
-                  >
-                    <RadioGroupItem value={item.id} className="sr-only" />
-                    <Icon className="h-6 w-6 mb-2" />
-                    <span className="text-xs">{item.label}</span>
-                  </Label>
-                );
-              })}
+              {AVATAR_ICONS.map((item) => (
+                <Label
+                  key={item.id}
+                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"
+                >
+                  <RadioGroupItem value={item.id} className="sr-only" />
+                  <item.icon className="size-5 mb-2" />
+                  <span className="text-xs">{item.label}</span>
+                </Label>
+              ))}
             </RadioGroup>
             <FormMessage />
           </FormItem>
@@ -81,11 +78,11 @@ export function RegisterStepProfile() {
               {AVATAR_COLORS.map((color) => (
                 <Label
                   key={color.id}
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"
+                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground [&:has([data-state=checked])]:border-primary"
                 >
                   <RadioGroupItem value={color.id} className="sr-only" />
                   <div
-                    className={cn("size-6 rounded-full mb-2", color.class)}
+                    className={cn("size-5 rounded-full mb-2", color.class)}
                   />
                   <span className="text-xs">{color.label}</span>
                 </Label>

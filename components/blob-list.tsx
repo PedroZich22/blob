@@ -10,7 +10,7 @@ export function BlobList({ blobs }: BlobProps) {
   if (!blobs) return <BlobListSkeleton />;
 
   return (
-    <div>
+    <div className="space-y-4 p-4 pb-16 lg:pb-0">
       {blobs.map((blob) => (
         <Blob key={blob.id} blob={blob} />
       ))}

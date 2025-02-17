@@ -43,6 +43,7 @@ export async function createUser(user: RegisterSchemaData) {
   return await db.user.create({
     data: {
       email: user.email,
+      name: user.name,
       username: user.username,
       password: user.password,
       avatarColor: user.avatar.color,

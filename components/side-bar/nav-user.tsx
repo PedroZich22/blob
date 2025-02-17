@@ -45,6 +45,9 @@ export function NavUser({ user }: NavUserProps) {
               <UserAvatar user={user} />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="font-semibold truncate">{user?.name}</span>
+                <span className="text-xs text-muted-foreground truncate">
+                  @{user?.username}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -60,6 +63,9 @@ export function NavUser({ user }: NavUserProps) {
                 <UserAvatar user={user} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user?.name}</span>
+                  <span className="text-xs text-muted-foreground truncate">
+                    @{user?.username}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>

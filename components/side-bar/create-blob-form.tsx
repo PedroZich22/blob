@@ -82,19 +82,15 @@ export function CreateBlobForm() {
         <FormField
           control={form.control}
           name="interests"
-          render={() => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Categorias</FormLabel>
               <FormControl>
-                <Controller
-                  control={form.control}
-                  name="interests"
-                  render={() => (
-                    <MultipleSelector
-                      emptyIndicator="Vazio."
-                      defaultOptions={mapInterests}
-                    />
-                  )}
+                <MultipleSelector
+                  {...field}
+                  emptyIndicator={"Nenhuma categoria encontrada"}
+                  placeholder="Selecione as categorias"
+                  options={mapInterests}
                 />
               </FormControl>
               <FormMessage />
@@ -118,7 +114,7 @@ export function CreateBlobForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">blobar</Button>
+        <Button type="submit">Criar</Button>
       </form>
     </Form>
   );

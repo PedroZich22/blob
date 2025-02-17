@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,7 +9,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { PencilLine } from "lucide-react";
-import { useSidebar } from "../ui/sidebar";
+import { SidebarMenuButton, useSidebar } from "../ui/sidebar";
 import {
   Drawer,
   DrawerContent,
@@ -19,23 +18,26 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
-import { CreateBlobForm } from "./create-post-form";
+import { CreateBlobForm } from "./create-blob-form";
 
-export function CreatePost() {
-  const { open, isMobile } = useSidebar();
+export function CreateBlob() {
+  const { isMobile } = useSidebar();
 
   if (isMobile) {
     return (
       <Drawer>
         <DrawerTrigger asChild>
-          <Button type="button" variant="gooeyRight" className="w-full">
-            Postar
-            <PencilLine className="size-4 ml-2" />
-          </Button>
+          <SidebarMenuButton
+            size={"lg"}
+            className="bg-primary text-primary-foreground hover:bg-primary/50 transition-all"
+          >
+            <PencilLine />
+            <span>Crie um Blob</span>
+          </SidebarMenuButton>
         </DrawerTrigger>
         <DrawerContent className="p-4">
           <DrawerHeader>
-            <DrawerTitle>Crie um post</DrawerTitle>
+            <DrawerTitle>Crie um Blob</DrawerTitle>
             <DrawerDescription>
               Escreva o que está pensando para o mundo.
             </DrawerDescription>
@@ -49,14 +51,17 @@ export function CreatePost() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button" variant="gooeyRight" className="w-full">
-          {open && "Postar"}
-          <PencilLine className="size-4 ml-2" />
-        </Button>
+        <SidebarMenuButton
+          size={"lg"}
+          className="bg-primary text-primary-foreground hover:bg-primary/50 transition-all"
+        >
+          <PencilLine />
+          <span>Cire um Blob</span>
+        </SidebarMenuButton>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Crie um post</DialogTitle>
+          <DialogTitle>Crie um Blob</DialogTitle>
           <DialogDescription>
             Escreva o que está pensando para o mundo.
           </DialogDescription>

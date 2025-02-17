@@ -27,7 +27,7 @@ export function UserSuggestions() {
           {users?.map((user) => (
             <div className="flex items-center justify-between" key={user.email}>
               <div className="flex gap-2">
-                <UserAvatar user={user} size="lg" />
+                <UserAvatar user={user} />
                 <div className="flex flex-col justify-center">
                   <Link
                     href={"/profile/" + user.id}
@@ -52,21 +52,5 @@ export function UserSuggestions() {
 }
 
 function UserSuggestionsSkeleton() {
-  return (
-    <div className="space-y-4">
-      {Array.from({ length: 3 }).map((_, index) => (
-        <div className="flex items-center justify-between" key={index}>
-          <div className="flex gap-2">
-            <Avatar>
-              <AvatarFallback />
-            </Avatar>
-            <div className="flex flex-col gap-1">
-              <Skeleton className="w-20 h-4" />
-              <Skeleton className="w-10 h-3" />
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  return <Skeleton className="w-full h-20" />;
 }

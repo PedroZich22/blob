@@ -27,7 +27,7 @@ const forms: Form<RegisterFormType>[] = [
     title: "Conta",
     description: "Insira seus dados para começar.",
     form: RegisterStepAccount,
-    fields: ["email", "username", "password"],
+    fields: ["email", "name", "username", "password"],
   },
   {
     id: 2,

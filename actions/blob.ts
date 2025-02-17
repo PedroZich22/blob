@@ -16,7 +16,7 @@ export async function createBlob({ blob, userId }: CreateBlobData) {
     data: {
       content: blob.content,
       interests: {
-        connect: blob.interests.map((interestId) => ({ id: interestId })),
+        connect: blob.interests.map(({ value }) => ({ id: value })),
       },
       userId,
     },
@@ -40,6 +40,35 @@ export async function getBlobsByUserId(userId: string) {
     },
     orderBy: { createdAt: "desc" },
   });
+}
+
+export async function getBlobsFiltered(interestsId?: string[]) {
+  if (interestsId && interestsId.length > 0) {
+    return await db.blob.findMany({
+      where: {
+        interests: {
+          some: {
+            id: {
+              in: interestsId,
+            },
+          },
+        },
+      },
+      include: {
+        interests: true,
+        user: true,
+        comments: {
+          include: { user: true },
+        },
+        _count: {
+          select: { comments: true, likes: true },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  } else {
+    return await getBlobs();
+  }
 }
 
 export async function getBlobs() {

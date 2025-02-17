@@ -53,9 +53,15 @@ export const EditProfileSchema = z.object({
   }),
 });
 
+const optionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+  disable: z.boolean().optional(),
+});
+
 export const BlobSchema = z.object({
   content: z.string().min(1, "O conteúdo do post é obrigatório"),
-  interests: z.array(z.string()),
+  interests: z.array(optionSchema),
 });
 
 export const CommentSchema = z.object({

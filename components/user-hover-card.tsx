@@ -8,7 +8,7 @@ import { CalendarDays } from "lucide-react";
 import { formatDateDistanceToNowWithSuffix } from "@/lib/formatter";
 import { UserAvatar } from "./user-avatar";
 import Link from "next/link";
-import { User } from "next-auth";
+import { User } from "@prisma/client";
 
 interface UserHoverCardProps {
   user: User;
@@ -34,9 +34,9 @@ export function UserHoverCard({ user }: UserHoverCardProps) {
               <p className="text-sm text-muted-foreground">@{user.username}</p>
             </div>
           </div>
-          <Button className="mr-auto" variant="outline">
+          {/* <Button className="mr-auto" variant="outline">
             Seguir
-          </Button>
+          </Button> */}
         </div>
         <div className="mt-2">
           <p className="text-sm">{user.bio}</p>

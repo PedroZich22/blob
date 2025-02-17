@@ -36,7 +36,7 @@ export default {
           const { email, password } = validatedFields.data;
 
           const user = await getUserByEmail(email);
-          if (!user || !user.password) return null;
+          if (!user || !user.password) throw new Error("Invalid credentials");
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
           if (passwordsMatch) return user;

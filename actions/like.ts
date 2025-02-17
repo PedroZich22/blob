@@ -1,5 +1,6 @@
+"use server";
+
 import { db } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 
 export async function toggleLike(blobId: string, userId: string) {
   const existingLike = await db.like.findUnique({
@@ -26,7 +27,6 @@ export async function toggleLike(blobId: string, userId: string) {
     });
   }
 
-  revalidatePath(`profile/${userId}/blob/${blobId}`);
   return { liked: !existingLike };
 }
 
@@ -37,6 +37,14 @@ export async function getLikeStatus(blobId: string, userId: string) {
         userId,
         blobId,
       },
+    },
+  });
+}
+
+export async function getLikesCount(blobId: string) {
+  return db.like.count({
+    where: {
+      blobId,
     },
   });
 }

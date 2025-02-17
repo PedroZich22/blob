@@ -49,17 +49,16 @@ export function LoginForm() {
           title: "Erro ao realizar login",
           description: result.error,
         });
+      } else {
+        toast({
+          variant: "success",
+          title: "Login realizado com sucesso",
+          description: result.success,
+        });
+
+        router.push("/");
+        router.refresh();
       }
-
-      toast({
-        variant: "success",
-        title: "Login realizado com sucesso",
-        description: result.success,
-      });
-
-      console.log("Login realizado com sucesso");
-
-      router.push("/");
     });
   };
 

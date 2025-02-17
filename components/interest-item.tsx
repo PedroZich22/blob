@@ -6,7 +6,7 @@ import { Skeleton } from "./ui/skeleton";
 import { ExtendedInterest } from "@/types/db";
 
 interface InterestItemProps {
-  interest: Partial<ExtendedInterest>;
+  interest: ExtendedInterest;
   selected: boolean;
   onClick: () => void;
 }
@@ -26,7 +26,7 @@ export function InterestItem({
     >
       <span className="truncate">#{interest.name}</span>
       <span className="ml-1.5 text-muted-foreground">
-        {interest._count?.posts}
+        {interest._count?.blobs}
       </span>
     </Button>
   );

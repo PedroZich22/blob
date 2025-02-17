@@ -15,7 +15,9 @@ export function UserAvatar({ user, ...props }: UserAvatarProps) {
   return (
     <Avatar {...props}>
       <AvatarImage src={user?.image ?? undefined} />
-      <AvatarFallback className={color}>{Icon && <Icon />}</AvatarFallback>
+      <AvatarFallback className={color}>
+        {Icon && <Icon className="w-full h-full p-1" />}
+      </AvatarFallback>
     </Avatar>
   );
 }
